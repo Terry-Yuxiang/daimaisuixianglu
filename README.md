@@ -207,12 +207,12 @@ class Solution {
 
 ### 第四天
 
-总结写在前面：
+总结写在前面：  
 1.注意一下24题的递归的写法，以及19题的快慢指针的思路。  
 2.linkedList的题目，画图十分有用！！！  
 3.今天的最后一个题leetcode 142题circle linkedlist是经典的快慢指针，需要一些数学计算。  
 
-24. Swap Nodes in Pairs
+[24. Swap Nodes in Pairs]()
 自己写的时候用双指针的写法比较轻松的AC，注意一下递归的写法。
 ```
 //双指针
@@ -316,7 +316,7 @@ public class Solution {
     }
 }
 ```
-142. Linked List Cycle II
+[142. Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/description/)
 以前做过，有点忘记了，很经典的快慢指针！https://programmercarl.com/0142.%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II.html
 ```
 public class Solution {
