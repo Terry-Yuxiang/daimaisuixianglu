@@ -205,3 +205,51 @@ class Solution {
 
 今天的链表题目比较基础，属于是基本功！
 
+### 第四天
+
+24. Swap Nodes in Pairs
+自己写的时候用双指针的写法比较轻松的AC，注意一下递归的写法。
+```
+//双指针
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        ListNode first = new ListNode();
+        first.next = head;
+        ListNode cur = first;
+        while(cur.next != null) {
+            if(cur.next.next != null) {
+                // need to change
+                ListNode left = cur.next;
+                ListNode right = cur.next.next;
+                cur.next = right;
+                left.next = right.next;
+                right.next = left;
+                cur = left;
+            } else {
+                break;
+            }
+        }
+        return first.next;
+    }
+}
+```
+```
+//递归
+// 递归版本
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        // base case 退出提交
+        if(head == null || head.next == null) return head;
+        // 获取当前节点的下一个节点
+        ListNode next = head.next;
+        // 进行递归
+        ListNode newNode = swapPairs(next.next);
+        // 这里进行交换
+        next.next = head;
+        head.next = newNode;
+
+        return next;
+    }
+} 
+```
+
