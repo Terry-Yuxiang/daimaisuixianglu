@@ -257,7 +257,7 @@ class Solution {
     }
 } 
 ```
-19. Remove Nth Node From End of List
+[19. Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/)  
 很经典的快慢指针，一开始没有想到，用了ArrayList超过memory limit了。
 ```
 class Solution {
@@ -279,7 +279,7 @@ class Solution {
 }
 ```
 
-160. Intersection of Two Linked Lists
+[160. Intersection of Two Linked Lists](https://leetcode.com/problems/intersection-of-two-linked-lists/)  
 比较简单，只需要先求出两个数组的长度，长的先动就可以。
 ```
 public class Solution {
