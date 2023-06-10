@@ -207,6 +207,10 @@ class Solution {
 
 ### 第四天
 
+总结写在前面：
+1.注意一下24题的递归的写法，以及19题的快慢指针的思路。
+2.linkedList的题目，画图十分有用！！！
+
 24. Swap Nodes in Pairs
 自己写的时候用双指针的写法比较轻松的AC，注意一下递归的写法。
 ```
@@ -251,5 +255,89 @@ class Solution {
         return next;
     }
 } 
+```
+19. Remove Nth Node From End of List
+很经典的快慢指针，一开始没有想到，用了ArrayList超过memory limit了。
+```
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode ahead = new ListNode();
+        ahead.next = head;
+        ListNode cur = ahead;
+        ListNode fast = head;
+        for(int i = 0; i < n - 1; i ++) {
+            fast = fast.next;
+        }
+        while(fast != null && fast.next != null) {
+            cur = cur.next;
+            fast = fast.next;
+        }
+        cur.next = cur.next.next;
+        return ahead.next;
+    }
+}
+```
+
+160. Intersection of Two Linked Lists
+比较简单，只需要先求出两个数组的长度，长的先动就可以。
+```
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        int nA = 0;
+        int nB = 0;
+        ListNode curA = headA;
+        while(curA != null) {
+            curA = curA.next;
+            nA++;
+        }
+        ListNode curB = headB;
+        while(curB != null) {
+            curB = curB.next;
+            nB++;
+        }
+        curA = headA;
+        curB = headB;
+        for(int i = 0; i < Math.abs(nB - nA); i++) {
+            if(nB >= nA) {
+                curB = curB.next;
+            } else {
+                curA = curA.next;
+            }
+        }
+        while(curA != null) {
+            if(curA == curB) {
+                return curA;
+            }
+            curA = curA.next;
+            curB = curB.next;
+        }
+        return null;
+    }
+}
+```
+142. Linked List Cycle II
+以前做过，有点忘记了，很经典的快慢指针！https://programmercarl.com/0142.%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8II.html
+```
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {// 有环
+                ListNode index1 = fast;
+                ListNode index2 = head;
+                // 两个指针，从头结点和相遇结点，各走一步，直到相遇，相遇点即为环入口
+                while (index1 != index2) {
+                    index1 = index1.next;
+                    index2 = index2.next;
+                }
+                return index1;
+            }
+        }
+        return null;
+    }
+}
 ```
 
