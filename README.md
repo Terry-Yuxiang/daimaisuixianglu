@@ -343,3 +343,13 @@ public class Solution {
 }
 ```
 
+## 哈希表
+### 第一天
+242. Valid Anagram
+
+349. Intersection of Two Arrays
+
+202. Happy Number
+
+1. Two Sum
+
