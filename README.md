@@ -390,4 +390,141 @@ class Solution {
     }
 }
  ```
+剑指 Offer 05. 替换空格. 
+申请额外空间的方法很简单，还有一种做法是先扩充数组，再从后向前用双指针替换空格。    
+```
+class Solution {
+    public String replaceSpace(String s) {
+        if(s == null || s.length() == 0){
+        return s;
+    }
+    //扩充空间，空格数量2倍
+    StringBuilder str = new StringBuilder();
+    for (int i = 0; i < s.length(); i++) {
+        if(s.charAt(i) == ' '){
+            str.append("  ");
+        }
+    }
+    //若是没有空格直接返回
+    if(str.length() == 0){
+        return s;
+    }
+    //有空格情况 定义两个指针
+    int left = s.length() - 1;//左指针：指向原始字符串最后一个位置
+    s += str.toString();
+    int right = s.length()-1;//右指针：指向扩展字符串的最后一个位置
+    char[] chars = s.toCharArray();
+    while(left>=0){
+        if(chars[left] == ' '){
+            chars[right--] = '0';
+            chars[right--] = '2';
+            chars[right] = '%';
+        }else{
+            chars[right] = chars[left];
+        }
+        left--;
+        right--;
+    }
+    return new String(chars);
+    }
+}
+```
+151. Reverse Words in a String
+这个题如果用Java的内部方法，分割空格再反转就很简单。主要考虑一下如何不适用额外的空间完成。
+```
+class Solution {
+   /**
+     * 不使用Java内置方法实现
+     * <p>
+     * 1.去除首尾以及中间多余空格
+     * 2.反转整个字符串
+     * 3.反转各个单词
+     */
+    public String reverseWords(String s) {
+        // System.out.println("ReverseWords.reverseWords2() called with: s = [" + s + "]");
+        // 1.去除首尾以及中间多余空格
+        StringBuilder sb = removeSpace(s);
+        // 2.反转整个字符串
+        reverseString(sb, 0, sb.length() - 1);
+        // 3.反转各个单词
+        reverseEachWord(sb);
+        return sb.toString();
+    }
+
+    private StringBuilder removeSpace(String s) {
+        // System.out.println("ReverseWords.removeSpace() called with: s = [" + s + "]");
+        int start = 0;
+        int end = s.length() - 1;
+        while (s.charAt(start) == ' ') start++;
+        while (s.charAt(end) == ' ') end--;
+        StringBuilder sb = new StringBuilder();
+        while (start <= end) {
+            char c = s.charAt(start);
+            if (c != ' ' || sb.charAt(sb.length() - 1) != ' ') {
+                sb.append(c);
+            }
+            start++;
+        }
+        // System.out.println("ReverseWords.removeSpace returned: sb = [" + sb + "]");
+        return sb;
+    }
+
+    /**
+     * 反转字符串指定区间[start, end]的字符
+     */
+    public void reverseString(StringBuilder sb, int start, int end) {
+        // System.out.println("ReverseWords.reverseString() called with: sb = [" + sb + "], start = [" + start + "], end = [" + end + "]");
+        while (start < end) {
+            char temp = sb.charAt(start);
+            sb.setCharAt(start, sb.charAt(end));
+            sb.setCharAt(end, temp);
+            start++;
+            end--;
+        }
+        // System.out.println("ReverseWords.reverseString returned: sb = [" + sb + "]");
+    }
+
+    private void reverseEachWord(StringBuilder sb) {
+        int start = 0;
+        int end = 1;
+        int n = sb.length();
+        while (start < n) {
+            while (end < n && sb.charAt(end) != ' ') {
+                end++;
+            }
+            reverseString(sb, start, end - 1);
+            start = end + 1;
+            end = start + 1;
+        }
+    }
+}
+```
+
+剑指 Offer 58 - II. 左旋转字符串
+难点也是如何在不申请额外空间的情况下进行左旋字符串
+```
+//具体步骤为：
+//反转区间为前n的子串
+//反转区间为n到末尾的子串
+//反转整个字符串
+
+class Solution {
+    public String reverseLeftWords(String s, int n) {
+        int len=s.length();
+        StringBuilder sb=new StringBuilder(s);
+        reverseString(sb,0,n-1);
+        reverseString(sb,n,len-1);
+        return sb.reverse().toString();
+    }
+     public void reverseString(StringBuilder sb, int start, int end) {
+        while (start < end) {
+            char temp = sb.charAt(start);
+            sb.setCharAt(start, sb.charAt(end));
+            sb.setCharAt(end, temp);
+            start++;
+            end--;
+            }
+        }
+}
+```
 
