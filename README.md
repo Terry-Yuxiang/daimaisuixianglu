@@ -1,7 +1,7 @@
 # 代码随想录刷题总结
 ## 目录
 [第一天](#第一天)     [第二天](#第二天)     [第三天](#第三天)     [第四天](#第四天) [第五天](#第五天) [第六天](#第六天) [第七天](#第七天)
-[第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)
+[第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)
 
 ## 数组
 ### 第一天
@@ -606,3 +606,99 @@ class Solution {
     }
 }
 ```
+
+## 栈与队列
+### 第十天
+20. Valid Parentheses.  
+经典的栈的使用
+```
+class Solution {
+    public boolean isValid(String s) {
+        Deque<Character> deque = new LinkedList<>();
+        char ch;
+        for (int i = 0; i < s.length(); i++) {
+            ch = s.charAt(i);
+            //碰到左括号，就把相应的右括号入栈
+            if (ch == '(') {
+                deque.push(')');
+            }else if (ch == '{') {
+                deque.push('}');
+            }else if (ch == '[') {
+                deque.push(']');
+            } else if (deque.isEmpty() || deque.peek() != ch) {
+                return false;
+            }else {//如果是右括号判断是否和栈顶元素匹配
+                deque.pop();
+            }
+        }
+        //最后判断栈中元素是否匹配
+        return deque.isEmpty();
+    }
+}
+```
+1047. Remove All Adjacent Duplicates In String.  
+也是一个比较经典的栈的题目，可以用栈的特性来进行消除。
+这里可以用字符串直接作为栈，这样可以省去用把栈转换为字符串的时间。
+```
+class Solution {
+    public String removeDuplicates(String s) {
+        // 将 res 当做栈
+        // 也可以用 StringBuilder 来修改字符串，速度更快
+        // StringBuilder res = new StringBuilder();
+        StringBuffer res = new StringBuffer();
+        // top为 res 的长度
+        int top = -1;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            // 当 top > 0,即栈中有字符时，当前字符如果和栈中字符相等，弹出栈顶字符，同时 top--
+            if (top >= 0 && res.charAt(top) == c) {
+                res.deleteCharAt(top);
+                top--;
+            // 否则，将该字符 入栈，同时top++
+            } else {
+                res.append(c);
+                top++;
+            }
+        }
+        return res.toString();
+    }
+}
+```
+150. Evaluate Reverse Polish Notation
+同样是比较经典的栈的应用
+```
+class Solution {
+    public int evalRPN(String[] tokens) {
+        Stack<String> s = new Stack<>();
+        int ans = 0;
+        for(int i = 0; i < tokens.length; i++) {
+            if(tokens[i].equals("+")) {
+                int b = Integer.parseInt(s.pop());
+                int a = Integer.parseInt(s.pop());
+                s.push(Integer.toString(a + b));
+            }
+            else if(tokens[i].equals("-")) {
+                int b = Integer.parseInt(s.pop());
+                int a = Integer.parseInt(s.pop());
+                s.push(Integer.toString(a - b));
+            }
+            else if(tokens[i].equals("*")) {
+                int b = Integer.parseInt(s.pop());
+                int a = Integer.parseInt(s.pop());
+                s.push(Integer.toString(a * b));
+            }
+            else if(tokens[i].equals("/")) {
+                int b = Integer.parseInt(s.pop());
+                int a = Integer.parseInt(s.pop());
+                s.push(Integer.toString(a / b));
+            }
+            else {
+                s.push(tokens[i]);
+            }
+        }
+        return Integer.parseInt(s.pop());
+    }
+}
+```
+
+### 第十一天
