@@ -1,7 +1,7 @@
 # 代码随想录刷题总结
 ## 目录
 [第一天](#第一天)     [第二天](#第二天)     [第三天](#第三天)     [第四天](#第四天) [第五天](#第五天) [第六天](#第六天) [第七天](#第七天)
-[第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)    [第十二天](#第十二天)
+[第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)    [第十二天](#第十二天)    [第十三天](#第十三天)
 
 ## 数组
 ### 第一天
@@ -772,6 +772,31 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+347. Top K Frequent Elements
+这个题目是heap的题目，用到PriorityQueue来做，很经典的heap题目。
+大顶堆和小顶堆都可以完成这个题目。
+```
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
+        Queue<Integer> maxHeap = new PriorityQueue<Integer>(
+            (o1, o2) -> hashMap.get(o2) - hashMap.get(o1)
+        );
+        for(int num: nums) {
+            hashMap.put(num, hashMap.getOrDefault(num, 0) + 1);
+        }
+        int[] ans = new int[k];
+        for(int num: hashMap.keySet()) {
+            maxHeap.add(num);
+        }
+        for(int i = 0; i < k; i++) {
+            ans[i] = maxHeap.poll();
+        }
+        return ans;
+        
     }
 }
 ```
