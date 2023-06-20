@@ -809,22 +809,6 @@ DFS:前中后序遍历
 BFS:层序遍历  
 [144. Binary Tree Preorder Traversal](https://leetcode.com/problems/binary-tree-preorder-traversal/description/)
 ```
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
- * }
- */
-
 //递归的写法
 class Solution {
     public List<Integer> preorderTraversal(TreeNode root) {
@@ -863,4 +847,82 @@ class Solution {
 
 }
 ```
+[145. Binary Tree Postorder Traversal](https://leetcode.com/problems/binary-tree-postorder-traversal/description/)  
+```
+//递归的写法
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        traverse(ans, root);
+        return ans;
+    }
 
+    public void traverse(List<Integer> ans, TreeNode cur) {
+        if(cur == null) return;
+        traverse(ans, cur.left);
+        traverse(ans, cur.right);
+        ans.add(cur.val);
+    }
+}
+
+//迭代的写法
+class Solution {
+    public List<Integer> postorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        if(root == null) {
+            return ans;
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()) {
+            TreeNode cur = stack.pop();
+            ans.add(cur.val);
+            if(cur.left != null) stack.push(cur.left);
+            if(cur.right != null) stack.push(cur.right);
+        }
+        Collections.reverse(ans);
+        return ans;
+    }
+}
+```
+[94. Binary Tree Inorder Traversal](https://leetcode.com/problems/binary-tree-inorder-traversal/description/)  
+这种的迭代写法变换顺序可以变成前中后序遍历的统一的写法
+```
+//递归的写法
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        traverse(ans, root);
+        return ans;
+    }
+
+    public void traverse(List<Integer> ans, TreeNode cur) {
+        if(cur == null) return;
+        traverse(ans, cur.left);
+        ans.add(cur.val);
+        traverse(ans, cur.right);
+    }
+}
+
+//迭代的写法
+class Solution {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<>();
+        if(root == null) return ans;
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while(!stack.isEmpty()) {
+            TreeNode cur = stack.pop();
+            if(cur != null) {
+                if(cur.right != null) stack.push(cur.right);
+                stack.push(cur);
+                stack.push(null);
+                if(cur.left != null) stack.push(cur.left); 
+            } else {
+                ans.add(stack.pop().val);
+            }
+        }
+        return ans;
+    }
+}
+```
