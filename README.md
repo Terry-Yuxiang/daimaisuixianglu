@@ -2,6 +2,7 @@
 ## 目录
 [第一天](#第一天)     [第二天](#第二天)     [第三天](#第三天)     [第四天](#第四天) [第五天](#第五天) [第六天](#第六天) [第七天](#第七天)
 [第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)    [第十二天](#第十二天)    [第十三天](#第十三天)
+[第十四天](#第十四天)
 
 ## 数组
 ### 第一天
@@ -800,3 +801,66 @@ class Solution {
     }
 }
 ```
+
+## 二叉树
+### 第十四天
+今天的内容主要是二叉树的基础知识的回顾  
+DFS:前中后序遍历  
+BFS:层序遍历  
+144. Binary Tree Preorder Traversal
+```
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+//递归的写法
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<Integer>();
+        traverse(ans, root);
+        return ans;
+    }
+
+    public void traverse(List<Integer> ans, TreeNode cur) {
+        if(cur == null) return;
+        ans.add(cur.val);
+        traverse(ans, cur.left);
+        traverse(ans, cur.right);
+    }
+}
+
+//迭代的写法
+class Solution {
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> ans = new ArrayList<Integer>();
+        if(root == null) {
+            return ans;
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        stack.add(root);
+        while(!stack.isEmpty()) {
+            TreeNode cur = stack.pop();
+            if(cur != null) {
+                ans.add(cur.val);
+            }
+            if(cur.right != null) stack.push(cur.right);
+            if(cur.left != null) stack.push(cur.left);
+        }
+        return ans;
+    }
+
+}
+```
+
