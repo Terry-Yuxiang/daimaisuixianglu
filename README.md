@@ -2,7 +2,7 @@
 ## 目录
 [第一天](#第一天)     [第二天](#第二天)     [第三天](#第三天)     [第四天](#第四天) [第五天](#第五天) [第六天](#第六天) [第七天](#第七天)
 [第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)    [第十二天](#第十二天)    [第十三天](#第十三天)
-[第十四天](#第十四天)    [第十五天](#第十五天)
+[第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天)
 
 ## 数组
 ### 第一天
@@ -996,5 +996,95 @@ public boolean isMirror(TreeNode t1, TreeNode t2) {
     return (t1.val == t2.val)
         && isMirror(t1.right, t2.left)
         && isMirror(t1.left, t2.right);
+}
+```
+
+### 第十六天 
+[104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/v)  
+基础的树求depth的题目，需要牢牢掌握。
+```
+class Solution {
+    public int maxDepth(TreeNode root) {
+        return root == null ? 0 : Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+    }
+}
+```
+[111. Minimum Depth of Binary Tree](https://leetcode.com/problems/minimum-depth-of-binary-tree/description/)  
+这个题目求最小值，注意不是简单的把球depth的max改成min就可以的。因为，当一个node只有左或者右的时候，这个高度应该是取有child node的高度。
+```
+class Solution {
+    public int minDepth(TreeNode root) {
+        if(root != null) {
+            int rightDepth = minDepth(root.right);
+            int leftDepth = minDepth(root.left);
+            if(rightDepth != 0 && leftDepth != 0) {
+                return Math.min(rightDepth, leftDepth) + 1;
+            } else {
+                return Math.max(rightDepth, leftDepth) + 1;
+            }
+        }
+        return 0;
+    }
+}
+
+```
+
+[222. Count Complete Tree Nodes](https://leetcode.com/problems/count-complete-tree-nodes/description/)  
+这个题是求nodes的个数，如果只是简单用迭代法的话，用O(n)的时间跟完全二叉树其实没有关系。  
+为了利用到完全二叉树这个性质，其实可以使用binary search的方法。由于递归法比较简单，下面只贴出binary search的leetcode解法。
+```
+class Solution {
+  // Return tree depth in O(d) time.
+  public int computeDepth(TreeNode node) {
+    int d = 0;
+    while (node.left != null) {
+      node = node.left;
+      ++d;
+    }
+    return d;
+  }
+
+  // Last level nodes are enumerated from 0 to 2**d - 1 (left -> right).
+  // Return True if last level node idx exists. 
+  // Binary search with O(d) complexity.
+  public boolean exists(int idx, int d, TreeNode node) {
+    int left = 0, right = (int)Math.pow(2, d) - 1;
+    int pivot;
+    for(int i = 0; i < d; ++i) {
+      pivot = left + (right - left) / 2;
+      if (idx <= pivot) {
+        node = node.left;
+        right = pivot;
+      }
+      else {
+        node = node.right;
+        left = pivot + 1;
+      }
+    }
+    return node != null;
+  }
+
+  public int countNodes(TreeNode root) {
+    // if the tree is empty
+    if (root == null) return 0;
+
+    int d = computeDepth(root);
+    // if the tree contains 1 node
+    if (d == 0) return 1;
+
+    // Last level nodes are enumerated from 0 to 2**d - 1 (left -> right).
+    // Perform binary search to check how many nodes exist.
+    int left = 1, right = (int)Math.pow(2, d) - 1;
+    int pivot;
+    while (left <= right) {
+      pivot = left + (right - left) / 2;
+      if (exists(pivot, d, root)) left = pivot + 1;
+      else right = pivot - 1;
+    }
+
+    // The tree contains 2**d - 1 nodes on the first (d - 1) levels
+    // and left nodes on the last level.
+    return (int)Math.pow(2, d) - 1 + left;
+  }
 }
 ```
