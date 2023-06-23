@@ -2,7 +2,7 @@
 ## 目录
 [第一天](#第一天)     [第二天](#第二天)     [第三天](#第三天)     [第四天](#第四天) [第五天](#第五天) [第六天](#第六天) [第七天](#第七天)
 [第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)    [第十二天](#第十二天)    [第十三天](#第十三天)
-[第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天)
+[第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)
 
 ## 数组
 ### 第一天
@@ -1086,5 +1086,88 @@ class Solution {
     // and left nodes on the last level.
     return (int)Math.pow(2, d) - 1 + left;
   }
+}
+```
+
+### 第十七天
+[110. Balanced Binary Tree](https://leetcode.com/problems/balanced-binary-tree/description/)
+```
+class Solution {
+       /**
+     * 递归法
+     */
+    public boolean isBalanced(TreeNode root) {
+        return getHeight(root) != -1;
+    }
+
+    private int getHeight(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int leftHeight = getHeight(root.left);
+        if (leftHeight == -1) {
+            return -1;
+        }
+        int rightHeight = getHeight(root.right);
+        if (rightHeight == -1) {
+            return -1;
+        }
+        // 左右子树高度差大于1，return -1表示已经不是平衡树了
+        if (Math.abs(leftHeight - rightHeight) > 1) {
+            return -1;
+        }
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+}
+```
+[257. Binary Tree Paths](https://leetcode.com/problems/binary-tree-paths/description/)
+```
+class Solution {
+
+    private List<String> ans = new ArrayList<String>();
+
+    public List<String> binaryTreePaths(TreeNode root) {
+        DFS("", root);
+        return this.ans;
+    }
+
+    private void DFS(String s, TreeNode cur) {
+        if(cur != null) {
+            s = (s.equals("") ? cur.val + "" : s + "->" + cur.val);
+            DFS(s, cur.left);
+            DFS(s, cur.right);
+            if(cur.left == null && cur.right == null) {
+                this.ans.add(s);
+            }
+        }
+        return;
+    }
+}
+```
+
+[404. Sum of Left Leaves](https://leetcode.com/problems/sum-of-left-leaves/description/)
+```
+class Solution {
+
+    private int ans = 0;
+
+    public int sumOfLeftLeaves(TreeNode root) {
+        if(root == null) {
+            return 0;
+        }
+        dfs(root, false, ans);
+        return ans;
+    }
+
+    public void dfs(TreeNode cur, boolean isLeft, int ans) {
+        if(cur != null) {
+            if(cur.left != null) dfs(cur.left, true, ans);
+            if(cur.right != null) dfs(cur.right, false, ans);
+            if(isLeft && cur.left == null && cur.right == null) {
+                this.ans += cur.val;
+            }
+        }
+        return;
+    }
 }
 ```
