@@ -1287,3 +1287,18 @@ class Solution {
     }
 }
 ```
+[106. Construct Binary Tree from Inorder and Postorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/)  
+注意：  
+1.前序和中序可以确定唯一的二叉树。 
+2.后序和中序可以确定唯一的二叉树。  
+3.前序和后序无法确定唯一的二叉树，因为无法确定分割点的位置，无法确定左右子树。  
+这个类题目的重点在于，根据前序（后序）序列，找到中Node，来分割中序。再由中序和前序（后序）的大小相同，来分割前序（后序）。注意分割时，用了开区间还是闭区间。
+```
+
+```
+
+[105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)  
+思路与106的思路是一致的
+```
+
+```
