@@ -1294,11 +1294,58 @@ class Solution {
 3.前序和后序无法确定唯一的二叉树，因为无法确定分割点的位置，无法确定左右子树。  
 这个类题目的重点在于，根据前序（后序）序列，找到中Node，来分割中序。再由中序和前序（后序）的大小相同，来分割前序（后序）。注意分割时，用了开区间还是闭区间。
 ```
+class Solution {
 
+    private HashMap<Integer, Integer> map = new HashMap<>();
+
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+      int n = inorder.length;
+      for(int i = 0; i < n; i++) {
+        map.put(inorder[i], i);
+      }
+      return build(inorder, 0, n - 1, postorder, 0, n - 1);
+    }
+
+    private TreeNode build(int[] inorder, int inLeft, int inRight, int[] postorder, int postLeft, int postRight) {
+      if(inLeft > inRight || postLeft > postRight) {
+        return null;
+      }
+      int midLoc = map.get(postorder[postRight]);
+      TreeNode root = new TreeNode(inorder[midLoc]);
+      int leftLen = midLoc - inLeft;
+      int rightLen = inRight - midLoc;
+      root.left = build(inorder, inLeft, midLoc - 1, postorder, postLeft, postLeft + leftLen - 1);
+      root.right = build(inorder, midLoc + 1, inRight, postorder, postRight - rightLen, postRight - 1);
+      return root;
+    }
+}
 ```
 
 [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/)  
 思路与106的思路是一致的
 ```
+class Solution {
 
+    HashMap<Integer, Integer> loc = new HashMap<>();
+
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        int n = inorder.length;
+        for(int i = 0; i < n; i++) {
+            this.loc.put(inorder[i], i);
+        }
+        return build(preorder, 0, n, inorder, 0, n);
+    }
+
+    private TreeNode build(int[] preorder, int preLeft, int preRight, int[] inorder, int inLeft, int inRight) {
+        if(preLeft >= preRight || inLeft >= inRight) {
+            return null;
+        }
+        int midLoc = this.loc.get(preorder[preLeft]);
+        TreeNode root = new TreeNode(inorder[midLoc]);
+        root.left = build(preorder, preLeft + 1, preLeft + (midLoc - inLeft + 1) ,inorder, inLeft, midLoc);
+        root.right = build(preorder, preLeft + (midLoc - inLeft + 1), preRight, inorder, midLoc + 1, inRight);
+
+        return root;
+    }
+}
 ```
