@@ -2,7 +2,7 @@
 ## 目录
 [第一天](#第一天)     [第二天](#第二天)     [第三天](#第三天)     [第四天](#第四天) [第五天](#第五天) [第六天](#第六天) [第七天](#第七天)
 [第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)    [第十二天](#第十二天)    [第十三天](#第十三天)
-[第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)
+[第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)    [第十八天](#第十八天)
 
 ## 数组
 ### 第一天
@@ -1167,6 +1167,122 @@ class Solution {
                 this.ans += cur.val;
             }
         }
+        return;
+    }
+}
+```
+
+### 第十八天
+[513. Find Bottom Left Tree Value](https://leetcode.com/problems/find-bottom-left-tree-value/description/)
+自己很容易想出来了迭代的写法，递归参考了一下答案！递归时直接更新每当deep比较大的时候的值就行，因为是大于，所以更新的是最底层leftmost的值。
+```
+//递归法
+class Solution {
+
+    private int depth = -1;
+    private int result = 0;
+
+    public int findBottomLeftValue(TreeNode root) {
+        bfs(root, 0);
+        return this.result;
+    }
+
+    private void bfs(TreeNode cur, int deep) {
+        if(cur == null) return;
+        if(cur.left == null && cur.right == null) {
+            if(deep > this.depth) {
+                this.result = cur.val;
+                this.depth = deep;
+            }
+        }
+        bfs(cur.left, deep + 1);
+        bfs(cur.right, deep + 1);
+    }
+}
+
+//迭代法
+class Solution {
+    public int findBottomLeftValue(TreeNode root) {
+        if(root == null) {
+            return 0;
+        }
+        Queue<TreeNode> que = new LinkedList<>();
+        que.add(root);
+        int ans = 0;
+        while(!que.isEmpty()) {
+            int size = que.size();
+            ans = que.peek().val;
+            for(int i = 0; i < size; i++) {
+                TreeNode cur = que.poll();
+                if(cur.left != null)    que.add(cur.left);
+                if(cur.right != null)   que.add(cur.right);
+            }
+        }
+        return ans;
+    }
+}
+```
+[112. Path Sum](https://leetcode.com/problems/path-sum/description/)
+自己写的时候用了bfs自增的方式，实际上字节用targetSum自减就可以
+```
+class Solution {
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        return dfs(root, targetSum, 0);
+    }
+
+    private boolean dfs(TreeNode cur, int targetSum, int sum) {
+        if(cur != null) {
+            sum += cur.val;
+            if(cur.left == null && cur.right == null && targetSum == sum) {
+                return true;
+            }
+            return dfs(cur.left, targetSum, sum) || dfs(cur.right, targetSum, sum);
+        } else {
+            return false;
+        }
+    }
+}
+
+// 代码随想录答案
+// lc112 简洁方法
+class solution {
+    public boolean haspathsum(treenode root, int targetsum) {
+
+        if (root == null) return false; // 为空退出
+
+        // 叶子节点判断是否符合
+        if (root.left == null && root.right == null) return root.val == targetsum;
+
+        // 求两侧分支的路径和
+        return haspathsum(root.left, targetsum - root.val) || haspathsum(root.right, targetsum - root.val);
+    }
+}
+```
+
+[113. Path Sum II](https://leetcode.com/problems/path-sum-ii/description/)
+```
+class Solution {
+
+    private List<List<Integer>> ans = new ArrayList<>();
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        dfs(root, targetSum, new ArrayList<Integer>());
+        return ans;
+    }
+
+    private void dfs(TreeNode cur, int targetSum, ArrayList<Integer> array) {
+        if(cur == null) return;
+        
+        array.add(cur.val);
+        targetSum -= cur.val;
+        if(cur.left == null && cur.right == null && targetSum == 0) {
+            this.ans.add(new ArrayList<Integer>(array));
+        }
+        
+        dfs(cur.left, targetSum, array);
+        dfs(cur.right, targetSum, array);
+        array.remove(array.size() - 1);
+
         return;
     }
 }
