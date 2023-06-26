@@ -3,6 +3,7 @@
 [第一天](#第一天)     [第二天](#第二天)     [第三天](#第三天)     [第四天](#第四天) [第五天](#第五天) [第六天](#第六天) [第七天](#第七天)
 [第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)    [第十二天](#第十二天)    [第十三天](#第十三天)
 [第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)    [第十八天](#第十八天)
+[第十九天](#第十九天)    [第二十天](#第二十天)    
 
 ## 数组
 ### 第一天
@@ -1346,6 +1347,92 @@ class Solution {
         root.right = build(preorder, preLeft + (midLoc - inLeft + 1), preRight, inorder, midLoc + 1, inRight);
 
         return root;
+    }
+}
+```
+
+### 第十九天
+休息
+
+### 第二十天
+[654. Maximum Binary Tree](https://leetcode.com/problems/maximum-binary-tree/)  
+```
+class Solution {
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+        return findMaxNode(nums, 0, nums.length);
+    }
+
+    private TreeNode findMaxNode(int[] nums, int left, int right) {
+        if(left == right) {
+            return null;
+        }
+        int loc = -1;
+        int max = Integer.MIN_VALUE;
+        for(int i = left; i < right; i++) {
+            if(nums[i] > max) {
+                loc = i;
+                max = nums[i];
+            }
+        }
+        TreeNode root = new TreeNode(max);
+        root.left = findMaxNode(nums, left, loc);
+        root.right = findMaxNode(nums, loc + 1, right);
+
+        return root;
+    }
+}
+```
+[617. Merge Two Binary Trees](https://leetcode.com/problems/merge-two-binary-trees/description/)  
+下面贴出的是leetcode的答案，自己写出来了，但是判断写的比较麻烦，实际上可以写的很简单。
+```
+public class Solution {
+    public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+        if (t1 == null)
+            return t2;
+        if (t2 == null)
+            return t1;
+        t1.val += t2.val;
+        t1.left = mergeTrees(t1.left, t2.left);
+        t1.right = mergeTrees(t1.right, t2.right);
+        return t1;
+    }
+}
+
+[700. Search in a Binary Search Tree](https://leetcode.com/problems/search-in-a-binary-search-tree/description/)
+因为比较简单，下面只写出回溯做法。
+```
+class Solution {
+    public TreeNode searchBST(TreeNode root, int val) {
+        if(root == null || root.val == val) {
+            return root;
+        }
+        if(val > root.val) {
+            return searchBST(root.right, val);
+        } else {
+            return searchBST(root.left, val);
+        }
+    }
+}
+```
+
+[98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/description/)
+```
+class Solution {
+    public boolean validate(TreeNode root, Integer low, Integer high) {
+        // Empty trees are valid BSTs.
+        if (root == null) {
+            return true;
+        }
+        // The current node's value must be between low and high.
+        if ((low != null && root.val <= low) || (high != null && root.val >= high)) {
+            return false;
+        }
+        // The left and right subtree must also be valid.
+        return validate(root.right, root.val, high) && validate(root.left, low, root.val);
+    }
+
+    public boolean isValidBST(TreeNode root) {
+        return validate(root, null, null);
     }
 }
 ```
