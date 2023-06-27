@@ -3,7 +3,7 @@
 [第一天](#第一天)     [第二天](#第二天)     [第三天](#第三天)     [第四天](#第四天) [第五天](#第五天) [第六天](#第六天) [第七天](#第七天)
 [第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)    [第十二天](#第十二天)    [第十三天](#第十三天)
 [第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)    [第十八天](#第十八天)
-[第十九天](#第十九天)    [第二十天](#第二十天)    
+[第十九天](#第十九天)    [第二十天](#第二十天)      [第二十一天](#第二十一天)
 
 ## 数组
 ### 第一天
@@ -1433,6 +1433,119 @@ class Solution {
 
     public boolean isValidBST(TreeNode root) {
         return validate(root, null, null);
+    }
+}
+```
+
+
+### 第二十一天
+[530. Minimum Absolute Difference in BST](https://leetcode.com/problems/minimum-absolute-difference-in-bst/)
+这个题可以利用binary search tree的特性，用DFS的中序遍历来算差值（或者构建有序的list）
+```
+class Solution {
+    int minDifference = Integer.MAX_VALUE;
+    // Initially, it will be null.
+    TreeNode prevNode;
+
+    void inorderTraversal(TreeNode node) {
+        if (node == null) {
+            return;
+        }
+
+        inorderTraversal(node.left);
+        // Find the difference with the previous value if it is there.
+        if (prevNode != null) {
+            minDifference = Math.min(minDifference, node.val - prevNode.val);
+        }
+        prevNode = node;
+        inorderTraversal(node.right);
+    }
+
+    int getMinimumDifference(TreeNode root) {
+        inorderTraversal(root);
+        return minDifference;
+    }
+};
+```
+
+[501. Find Mode in Binary Search Tree](https://leetcode.com/problems/find-mode-in-binary-search-tree/)
+这个题不难，主要在于如何计数，以及涉及到用流转换map与list。
+```
+
+class Solution {
+	public int[] findMode(TreeNode root) {
+		Map<Integer, Integer> map = new HashMap<>();
+		List<Integer> list = new ArrayList<>();
+		if (root == null) return list.stream().mapToInt(Integer::intValue).toArray();
+		// 获得频率 Map
+		searchBST(root, map);
+		List<Map.Entry<Integer, Integer>> mapList = map.entrySet().stream()
+				.sorted((c1, c2) -> c2.getValue().compareTo(c1.getValue()))
+				.collect(Collectors.toList());
+		list.add(mapList.get(0).getKey());
+		// 把频率最高的加入 list
+		for (int i = 1; i < mapList.size(); i++) {
+			if (mapList.get(i).getValue() == mapList.get(i - 1).getValue()) {
+				list.add(mapList.get(i).getKey());
+			} else {
+				break;
+			}
+		}
+		return list.stream().mapToInt(Integer::intValue).toArray();
+	}
+
+	void searchBST(TreeNode curr, Map<Integer, Integer> map) {
+		if (curr == null) return;
+		map.put(curr.val, map.getOrDefault(curr.val, 0) + 1);
+		searchBST(curr.left, map);
+		searchBST(curr.right, map);
+	}
+
+}
+```
+
+[236. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)
+这个题目的关键在于，如何找到高度最小的公共节点，用left和right以及self计数的方式可以解决这个问题。在计数的时候，因为采用right和left共同计数，这样求道的一定是最近的节点，因为再往上追溯，一定只是这个节点的一边。
+```
+class Solution {
+
+    private TreeNode ans;
+
+    public Solution() {
+        // Variable to store LCA node.
+        this.ans = null;
+    }
+
+    private boolean recurseTree(TreeNode currentNode, TreeNode p, TreeNode q) {
+
+        // If reached the end of a branch, return false.
+        if (currentNode == null) {
+            return false;
+        }
+
+        // Left Recursion. If left recursion returns true, set left = 1 else 0
+        int left = this.recurseTree(currentNode.left, p, q) ? 1 : 0;
+
+        // Right Recursion
+        int right = this.recurseTree(currentNode.right, p, q) ? 1 : 0;
+
+        // If the current node is one of p or q
+        int mid = (currentNode == p || currentNode == q) ? 1 : 0;
+
+
+        // If any two of the flags left, right or mid become True
+        if (mid + left + right >= 2) {
+            this.ans = currentNode;
+        }
+
+        // Return true if any one of the three bool values is True.
+        return (mid + left + right > 0);
+    }
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        // Traverse the tree
+        this.recurseTree(root, p, q);
+        return this.ans;
     }
 }
 ```
