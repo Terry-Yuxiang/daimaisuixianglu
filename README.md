@@ -1397,9 +1397,11 @@ public class Solution {
         return t1;
     }
 }
+```
 
 [700. Search in a Binary Search Tree](https://leetcode.com/problems/search-in-a-binary-search-tree/description/)
 因为比较简单，下面只写出回溯做法。
+
 ```
 class Solution {
     public TreeNode searchBST(TreeNode root, int val) {
@@ -1416,6 +1418,8 @@ class Solution {
 ```
 
 [98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/description/)
+
+
 ```
 class Solution {
     public boolean validate(TreeNode root, Integer low, Integer high) {
@@ -1439,6 +1443,7 @@ class Solution {
 
 
 ### 第二十一天
+
 [530. Minimum Absolute Difference in BST](https://leetcode.com/problems/minimum-absolute-difference-in-bst/)
 这个题可以利用binary search tree的特性，用DFS的中序遍历来算差值（或者构建有序的list）
 ```
