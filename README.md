@@ -1507,6 +1507,9 @@ class Solution {
 [236. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)
 这个题目的关键在于，如何找到高度最小的公共节点，用left和right以及self计数的方式可以解决这个问题。在计数的时候，因为采用right和left共同计数，这样求道的一定是最近的节点，因为再往上追溯，一定只是这个节点的一边。
 ```
+//leetcode官方的计数解法
+//实际上不需要这么复杂，可以直接用left和right的null值来计数，这样消耗的空间比较少。
+//参考代码随想录的答案
 class Solution {
 
     private TreeNode ans;
@@ -1546,6 +1549,29 @@ class Solution {
         // Traverse the tree
         this.recurseTree(root, p, q);
         return this.ans;
+    }
+}
+
+//代码随想录解法
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) { // 递归结束条件
+            return root;
+        }
+
+        // 后序遍历
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        if(left == null && right == null) { // 若未找到节点 p 或 q
+            return null;
+        }else if(left == null && right != null) { // 若找到一个节点
+            return right;
+        }else if(left != null && right == null) { // 若找到一个节点
+            return left;
+        }else { // 若找到两个节点
+            return root;
+        }
     }
 }
 ```
