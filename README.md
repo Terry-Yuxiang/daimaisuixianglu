@@ -3,7 +3,8 @@
 [第一天](#第一天)     [第二天](#第二天)     [第三天](#第三天)     [第四天](#第四天) [第五天](#第五天) [第六天](#第六天) [第七天](#第七天)
 [第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)    [第十二天](#第十二天)    [第十三天](#第十三天)
 [第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)    [第十八天](#第十八天)
-[第十九天](#第十九天)    [第二十天](#第二十天)      [第二十一天](#第二十一天)
+[第十九天](#第十九天)    [第二十天](#第二十天)      [第二十一天](#第二十一天)	[第二十二天](#第二十二天)	[第二十三天](#第二十三天)
+[第二十四天](#第二十四天)
 
 ## 数组
 ### 第一天
@@ -1580,3 +1581,154 @@ class Solution {
     }
 }
 ```
+
+### 第二十二天
+[235. Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/)   
+跟236很像，但是这个是搜索二叉树，可以利用BST的特性来做。用236的方法也是可以的，但是这样时间比较短。
+```
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if(root == null) {
+            return root;
+        }
+        int big = Math.max(p.val, q.val);
+        int small = Math.min(p.val, q.val);
+        if(root.val <= big && root.val >= small) {
+            return root;
+        }
+        if(root.val > big) {
+            return lowestCommonAncestor(root.left, p, q);
+        } else {
+            return lowestCommonAncestor(root.right, p, q);
+        }
+    }
+}
+```
+[701. Insert into a Binary Search Tree](https://leetcode.com/problems/insert-into-a-binary-search-tree/)  
+这个题其实无需重构，只需要利用BST的性质，寻找对的空节点插入即可。
+```
+class Solution {
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        if (root == null) return new TreeNode(val);
+        TreeNode newRoot = root;
+        TreeNode pre = root;
+        while (root != null) {
+            pre = root;
+            if (root.val > val) {
+                root = root.left;
+            } else if (root.val < val) {
+                root = root.right;
+            } 
+        }
+        if (pre.val > val) {
+            pre.left = new TreeNode(val);
+        } else {
+            pre.right = new TreeNode(val);
+        }
+
+        return newRoot;
+    }
+}
+```
+[450. Delete Node in a BST](https://leetcode.com/problems/delete-node-in-a-bst/description/)  
+这个题目还是有一定难度的，特别是递归写法！！！
+```
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+        root = delete(root,key);
+        return root;
+    }
+
+    private TreeNode delete(TreeNode root, int key) {
+        if (root == null) return null;
+
+        if (root.val > key) {
+            root.left = delete(root.left,key);
+        } else if (root.val < key) {
+            root.right = delete(root.right,key);
+        } else {
+            if (root.left == null) return root.right;
+            if (root.right == null) return root.left;
+            TreeNode tmp = root.right;
+            while (tmp.left != null) {
+                tmp = tmp.left;
+            }
+            root.val = tmp.val;
+            root.right = delete(root.right,tmp.val);
+        }
+        return root;
+    }
+}
+```
+
+
+
+### 第二十三天
+[669. Trim a Binary Search Tree](https://leetcode.com/problems/trim-a-binary-search-tree/description/)  
+因为这个题再题目中限定，被删除的节点只会有一个相邻的child node，大大简化的难度。用回溯完成，把握好写回溯的三要素即可。
+```
+class Solution {
+    public TreeNode trimBST(TreeNode root, int low, int high) {
+        if(root == null) {
+            return null;
+        }
+        root.left = trimBST(root.left, low, high);
+        root.right = trimBST(root.right, low, high);
+        int val = root.val;
+        if(val < low || val > high) {
+            return root.left == null ? root.right : root.left;
+        }
+        return root;
+    }
+}
+```
+
+[108. Convert Sorted Array to Binary Search Tree](https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/description/)    
+遵循左闭右开原则，一遍过。
+```
+class Solution {
+    public TreeNode sortedArrayToBST(int[] nums) {
+        int n = nums.length;
+        return constructBST(nums, 0, n);
+    }
+
+    private TreeNode constructBST(int[] nums, int begin, int end) {
+        //用左闭右开
+        if(begin >= end) {
+            return null;
+        }
+        int mid = begin + (end - begin) / 2;
+        TreeNode node = new TreeNode(nums[mid]);
+        node.left = constructBST(nums, begin, mid);
+        node.right = constructBST(nums, mid + 1, end);
+
+        return node;
+    }
+}
+```
+[538. Convert BST to Greater Tree](https://leetcode.com/problems/convert-bst-to-greater-tree/description/)  
+遵循右 -> 中 -> 左 遍历，很容易把代码写出来，与递归遍历代码基本一致，只是多了一个求和的步骤。
+```
+class Solution {
+
+    private int sum = 0;
+
+    // 右 -> 中 -> 左 遍历
+    public TreeNode convertBST(TreeNode root) {
+        if(root == null) {
+            return root;
+        }
+        root.right = convertBST(root.right);
+        
+        int val = root.val;
+        root.val += sum;
+        sum += val;
+
+        root.left = convertBST(root.left);
+        return root;
+    }
+}
+```
+
+
+### 第二十四天
