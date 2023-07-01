@@ -4,7 +4,7 @@
 [第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)    [第十二天](#第十二天)    [第十三天](#第十三天)
 [第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)    [第十八天](#第十八天)
 [第十九天](#第十九天)    [第二十天](#第二十天)      [第二十一天](#第二十一天)	[第二十二天](#第二十二天)	[第二十三天](#第二十三天)
-[第二十四天](#第二十四天)
+[第二十四天](#第二十四天) 	[第二十五天](#第二十五天)
 
 ## 数组
 ### 第一天
@@ -1762,4 +1762,87 @@ class Solution {
     }
 }
 ```
+### 第二十五天
+[216. Combination Sum III](https://leetcode.com/problems/combination-sum-iii/description/)  
+与昨天的组合很像。
+```
+class Solution {
 
+    private List<List<Integer>> ans = new ArrayList<>();
+    
+    private LinkedList<Integer> oneAns = new LinkedList<>();
+
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        backTrack(k, n, 1, 0);
+        return ans;
+    }
+
+    private void backTrack(int k, int n, int begin, int sum) {
+        if(oneAns.size() == k) {
+            return;
+        }
+
+        if(begin == 10) {
+            return;
+        }
+
+        for(int i = begin; i < 10; i++) {
+            sum += i;
+            oneAns.add(i);
+            backTrack(k, n, i + 1, sum);
+            if(oneAns.size() == k && sum == n) {
+                ans.add(new ArrayList<>(oneAns));
+            }
+            sum -= i;
+            oneAns.removeLast();
+        }
+
+        return;
+
+    }
+}
+```
+
+[17. Letter Combinations of a Phone Number](https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/)  
+构建了一个map，剩下的backtrack与前两题相似。
+```
+class Solution {
+
+    private HashMap<Character, char[]> map = new HashMap<>();
+
+    private List<String> ans = new ArrayList<>();
+
+    private String oneAns = "";
+
+    public List<String> letterCombinations(String digits) {
+        map.put('2', new char[]{'a', 'b', 'c'});
+        map.put('3', new char[]{'d', 'e', 'f'});
+        map.put('4', new char[]{'g', 'h', 'i'});
+        map.put('5', new char[]{'j', 'k', 'l'});
+        map.put('6', new char[]{'m', 'n', 'o'});
+        map.put('7', new char[]{'p', 'q', 'r', 's'});
+        map.put('8', new char[]{'t', 'u', 'v'});
+        map.put('9', new char[]{'w', 'x', 'y', 'z'});
+        backtrack(digits, 0);
+        return ans;
+    }
+
+    private void backtrack(String digits, int loc) {
+        if(loc >= digits.length()) {
+            if(oneAns.length() != 0) {
+                ans.add(oneAns);
+            }
+            return;
+        }
+
+        for(int i = 0; i < map.get(digits.charAt(loc)).length; i++) {
+            oneAns += map.get(digits.charAt(loc))[i];
+            backtrack(digits, loc + 1);
+            oneAns = oneAns.substring(0, oneAns.length() - 1);
+        }
+        return;
+    }
+
+    
+}
+```
