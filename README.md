@@ -1850,7 +1850,8 @@ class Solution {
 周末休息，复习了一下kmp算法。
 
 ### 第二十七天
-今天继续是回溯问题。
+今天继续是回溯问题。  
+
 [39. Combination Sum](https://leetcode.com/problems/combination-sum/description/)  
 因为前几天的leetcode的每日一题刚好也是回溯，做了一道类似的hard题，这个题比较轻松的AC了。下面第一个是我自己写的答案，我没有用for循环，而是利用两次回调来达成的目的，代码随想录给的范例用了for循环，而且先排序来进行剪枝。我虽然判断了剪枝的条件，但是因为没有先对数组进行排序，所以效果并不明显。
 ```
