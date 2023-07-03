@@ -4,7 +4,7 @@
 [第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)    [第十二天](#第十二天)    [第十三天](#第十三天)
 [第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)    [第十八天](#第十八天)
 [第十九天](#第十九天)    [第二十天](#第二十天)      [第二十一天](#第二十一天)	[第二十二天](#第二十二天)	[第二十三天](#第二十三天)
-[第二十四天](#第二十四天) 	[第二十五天](#第二十五天)
+[第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)
 
 ## 数组
 ### 第一天
@@ -1844,5 +1844,155 @@ class Solution {
     }
 
     
+}
+```
+### 第二十六天
+周末休息，复习了一下kmp算法。
+
+### 第二十七天
+今天继续是回溯问题。
+[39. Combination Sum](https://leetcode.com/problems/combination-sum/description/)  
+因为前几天的leetcode的每日一题刚好也是回溯，做了一道类似的hard题，这个题比较轻松的AC了。下面第一个是我自己写的答案，我没有用for循环，而是利用两次回调来达成的目的，代码随想录给的范例用了for循环，而且先排序来进行剪枝。我虽然判断了剪枝的条件，但是因为没有先对数组进行排序，所以效果并不明显。
+```
+// 自己写的答案
+class Solution {
+
+    private LinkedList<Integer> one = new LinkedList<>();
+
+    private List<List<Integer>> ans = new ArrayList<>();
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        backtrack(candidates, target, 0);
+        return ans;
+    }
+
+    private void backtrack(int[] candidates, int target, int index) {
+        if(target == 0) {
+            ans.add(new ArrayList<>(one));
+            return;
+        }
+        if(index == candidates.length || target < 0) {
+            return;
+        }
+
+
+        target -= candidates[index];
+        one.add(candidates[index]);
+        backtrack(candidates, target, index);
+
+        target += candidates[index];
+        one.removeLast();
+        backtrack(candidates, target, index + 1);
+
+
+        return;
+    }
+
+}
+
+//根据代码随想录的题解写的
+class Solution {
+
+    private List<List<Integer>> ans = new ArrayList<>();
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        backtrack(candidates, target, new LinkedList<>(), 0);
+        return ans;
+    }
+
+    private void backtrack(int[] candidates, int target, LinkedList<Integer> one, int index) {
+        if(target == 0) {
+            ans.add(new ArrayList<>(one));
+            return;
+        }
+        if(target < 0) {
+            return;
+        }
+        for(int i = index; i < candidates.length; i++) {
+            one.add(candidates[i]);
+            backtrack(candidates, target - candidates[i], one, i);
+            one.removeLast();
+        }
+
+        return;
+    }
+
+}
+```
+[40. Combination Sum II](https://leetcode.com/problems/combination-sum-ii/description/)  
+用set方法做会超时！！！！！！   
+这个题的主要难点在于怎么去重复！！
+```
+class Solution {
+  LinkedList<Integer> path = new LinkedList<>();
+  List<List<Integer>> ans = new ArrayList<>();
+  boolean[] used;
+  int sum = 0;
+
+  public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+    used = new boolean[candidates.length];
+    // 加标志数组，用来辅助判断同层节点是否已经遍历
+    Arrays.fill(used, false);
+    // 为了将重复的数字都放到一起，所以先进行排序
+    Arrays.sort(candidates);
+    backTracking(candidates, target, 0);
+    return ans;
+  }
+
+  private void backTracking(int[] candidates, int target, int startIndex) {
+    if (sum == target) {
+      ans.add(new ArrayList(path));
+    }
+    for (int i = startIndex; i < candidates.length; i++) {
+      if (sum + candidates[i] > target) {
+        break;
+      }
+      // 出现重复节点，同层的第一个节点已经被访问过，所以直接跳过
+      if (i > 0 && candidates[i] == candidates[i - 1] && !used[i - 1]) {
+        continue;
+      }
+      used[i] = true;
+      sum += candidates[i];
+      path.add(candidates[i]);
+      // 每个节点仅能选择一次，所以从下一位开始
+      backTracking(candidates, target, i + 1);
+      used[i] = false;
+      sum -= candidates[i];
+      path.removeLast();
+    }
+  }
+}
+```
+
+[131. Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/)  
+这个题是回溯的一个应用了，分割其实就是树的每一种遍历。也是运用for做横向遍历和递归来纵向遍历来做。
+```
+class Solution {
+    public List<List<String>> partition(String s) {
+        List<List<String>> result = new ArrayList<List<String>>();
+        dfs(0, result, new ArrayList<String>(), s);
+        return result;
+    }
+
+    void dfs(int start, List<List<String>> result, List<String> currentList, String s) {
+        if (start >= s.length()) result.add(new ArrayList<String>(currentList));
+        for (int end = start; end < s.length(); end++) {
+            if (isPalindrome(s, start, end)) {
+                // add current substring in the currentList
+                currentList.add(s.substring(start, end + 1));
+                dfs(end + 1, result, currentList, s);
+                // backtrack and remove the current substring from currentList
+                currentList.remove(currentList.size() - 1);
+            }
+        }
+    }
+
+    boolean isPalindrome(String s, int low, int high) {
+        while (low < high) {
+            if (s.charAt(low++) != s.charAt(high--)) return false;
+        }
+        return true;
+    }
 }
 ```
