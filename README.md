@@ -4,7 +4,7 @@
 [第八天](#第八天)     [第九天](#第九天)     [第十天](#第十天)     [第十一天](#第十一天)    [第十二天](#第十二天)    [第十三天](#第十三天)
 [第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)    [第十八天](#第十八天)
 [第十九天](#第十九天)    [第二十天](#第二十天)      [第二十一天](#第二十一天)	[第二十二天](#第二十二天)	[第二十三天](#第二十三天)
-[第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)
+[第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)	[第二十八天](#第二十八天)
 
 ## 数组
 ### 第一天
@@ -1997,3 +1997,103 @@ class Solution {
     }
 }
 ```
+
+### 第二十八天
+今天继续做回溯问题的题。   
+[93. Restore IP Addresses](https://leetcode.com/problems/restore-ip-addresses/description/)  
+这个题目跟分割palindorme是很像的，只是判断的边界条件要多一些。
+```
+class Solution {
+    private List<String> ans = new ArrayList<>();
+
+    public List<String> restoreIpAddresses(String s) {
+        backtrack(s, 0, "", 3);
+        return ans;
+    }
+
+    private void backtrack(String s, int start, String ip, int index) {
+        int n = s.length();
+        if(index == -1 && start != n) {
+            return;
+        }
+        if(start == n) {
+            ans.add(ip.substring(0, ip.length() - 1));
+            return;
+        }
+        for(int i = start; i < start + 3; i++) {
+            if(i >= n || n - i - 1 < index) {
+                return;
+            }
+            if((n - i - 1 > index * 3)) {
+                continue;
+            } else {
+                String a = s.substring(start, i + 1);
+                if(Integer.valueOf(a) > 255 || (a.charAt(0) == '0' && a.length() != 1))  {
+                    return;
+                }
+                backtrack(s, i + 1, ip + a + ".", index - 1);
+            }
+        }
+        return;
+    }
+}
+```
+
+[78. Subsets](https://leetcode.com/problems/subsets/description/)  
+这个题是个子集问题，其实就是收集树的每一个node的结果，经过前几天的训练很快速的AC了这个题。
+```
+class Solution {
+
+    private ArrayList<Integer> one = new ArrayList<Integer>();
+
+    private List<List<Integer>> ans = new ArrayList<>();
+
+    public List<List<Integer>> subsets(int[] nums) {
+        backtrack(nums, 0);
+        return ans;
+    }
+
+    private void backtrack(int[] nums, int index) {
+        int n = nums.length;
+        ans.add(new ArrayList<>(one));
+        for(int i = index; i < n; i++) {
+            one.add(nums[i]);
+            backtrack(nums, i + 1);
+            one.remove(one.size() - 1);
+        }
+        return;
+    }
+}
+```
+[90. Subsets II](https://leetcode.com/problems/subsets-ii/description/)  
+这个题和上个题目相似，只是因为不是unique所以需要去重。参考昨天的40题，也是去重复，可以用一个标记数组来解决这个问题。
+```
+class Solution {
+
+    private List<List<Integer>> ans = new ArrayList<>();
+
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        boolean[] b = new boolean[nums.length];
+        backtrack(nums, b, 0, new ArrayList<>());
+        return ans;
+    }
+
+    private void backtrack(int[] nums, boolean[] b, int index, ArrayList<Integer> one) {
+        int n = nums.length;
+        ans.add(new ArrayList<>(one));
+        for(int i = index; i < n; i++) {
+            if(i > 0 && nums[i] == nums[i - 1] && !b[i - 1]) {
+                continue;
+            }
+            one.add(nums[i]);
+            b[i] = true;
+            backtrack(nums, b, i + 1, one);
+            b[i] = false;
+            one.remove(one.size() - 1);
+        }
+        return;
+    }
+}
+```
+
