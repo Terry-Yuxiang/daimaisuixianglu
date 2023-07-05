@@ -5,6 +5,7 @@
 [第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)    [第十八天](#第十八天)
 [第十九天](#第十九天)    [第二十天](#第二十天)      [第二十一天](#第二十一天)	[第二十二天](#第二十二天)	[第二十三天](#第二十三天)
 [第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)	[第二十八天](#第二十八天)
+[第二十九天](#第二十九天)
 
 ## 数组
 ### 第一天
@@ -2097,3 +2098,123 @@ class Solution {
 }
 ```
 
+### 第二十九天
+[491. Non-decreasing Subsequences](https://leetcode.com/problems/non-decreasing-subsequences/)  
+这个题和90题很像，主要是去重复的考虑。因为这个没法将数组进行sort排序，所以在每一层用set去重。
+```
+class Solution {
+
+    private List<Integer> one = new ArrayList<>();
+    
+    private List<List<Integer>> ans = new ArrayList<>();
+    
+    public List<List<Integer>> findSubsequences(int[] nums) {
+        backtrack(nums, 0);
+        return ans;
+    }
+
+    private void backtrack(int[] nums, int index) {
+        if(one.size() >= 2) {
+            ans.add(new ArrayList<>(one));
+        }
+        
+        HashSet<Integer> set = new HashSet<>();
+        for(int i = index; i < nums.length; i++) {
+            if(!set.contains(nums[i]) &&
+            (one.size() == 0 || (nums[i] >= one.get(one.size() - 1)))) {
+                set.add(nums[i]);
+                one.add(nums[i]);
+                backtrack(nums, i + 1);
+                one.remove(one.size() - 1);
+            }
+        }
+        return;
+    }
+}
+```
+
+[46. Permutations](https://leetcode.com/problems/permutations/description/)  
+这个题目是全排列问题，与前面题目的区别主要在于，如何在横向遍历的时候不要取到已经取过的重复元素。解决这个办法的最好问题是构建一个数组，用下标是否在子树中访问过来判断。
+```
+class Solution {
+
+    private LinkedList<Integer> one = new LinkedList<>();
+
+    private List<List<Integer>> ans = new ArrayList<>();
+
+    public List<List<Integer>> permute(int[] nums) {
+        backtrack(nums, new boolean[nums.length], 0);
+        return ans;
+    }
+
+    private void backtrack(int[] nums, boolean[] ary, int count) {
+        if(one.size() == nums.length) {
+            ans.add(new ArrayList<>(one));
+        }
+        if(count == nums.length) {
+            return;
+        }
+        
+        for(int i = 0; i < nums.length; i++) {
+            if(ary[i] == true) {
+                continue;
+            }
+            ary[i] = true;
+            one.add(nums[i]);
+            backtrack(nums, ary, count + 1);
+            one.removeLast();
+            ary[i] = false;
+        }
+        return;
+    }
+}
+```
+
+[47. Permutations II](https://leetcode.com/problems/permutations-ii/description/)  
+这个题跟前几天做的题的思路一样，先sort数组，然后用used数组进行去重。
+```
+class Solution {
+
+    private LinkedList<Integer> one = new LinkedList<>();
+
+    private List<List<Integer>> ans = new ArrayList<>();
+
+    private boolean[] ary;
+
+    private boolean[] noRepeat;
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        ary = new boolean[nums.length];
+        noRepeat = new boolean[nums.length];
+        Arrays.fill(noRepeat, false);
+        Arrays.sort(nums);
+        backtrack(nums);
+        return ans;
+    }
+
+    private void backtrack(int[] nums) {
+        if(one.size() == nums.length) {
+            ans.add(new ArrayList<>(one));
+        }
+        for(int i = 0; i < nums.length; i++) {
+            if(ary[i] == true) {
+                continue;
+            }
+            if(i > 0 && nums[i] == nums[i - 1] && noRepeat[i - 1]) {
+                continue;
+            }
+
+            noRepeat[i] = true;
+            ary[i] = true;
+            one.add(nums[i]);
+            backtrack(nums);
+            one.removeLast();
+            ary[i] = false;
+            noRepeat[i] = false;
+            
+            
+        }
+        return;
+    }
+}
+```
