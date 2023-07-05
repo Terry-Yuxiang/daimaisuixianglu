@@ -2173,6 +2173,7 @@ class Solution {
 [47. Permutations II](https://leetcode.com/problems/permutations-ii/description/)  
 这个题跟前几天做的题的思路一样，先sort数组，然后用used数组进行去重。  
 这里有一个点需要注意，在去重复的时候used数组 == false和 == true都是可以去重复的，只是去重复在树上的位置不同。  
+用 used[i] == false 去重复可以减少很多无谓的遍历，很大程度上提高效率！  
 具体参考：https://programmercarl.com/0047.%E5%85%A8%E6%8E%92%E5%88%97II.html#%E6%8B%93%E5%B1%95
 ```
 class Solution {
