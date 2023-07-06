@@ -5,7 +5,7 @@
 [第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)    [第十八天](#第十八天)
 [第十九天](#第十九天)    [第二十天](#第二十天)      [第二十一天](#第二十一天)	[第二十二天](#第二十二天)	[第二十三天](#第二十三天)
 [第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)	[第二十八天](#第二十八天)
-[第二十九天](#第二十九天)
+[第二十九天](#第二十九天)	[第三十天](#第三十天)
 
 ## 数组
 ### 第一天
@@ -2218,6 +2218,186 @@ class Solution {
             
         }
         return;
+    }
+}
+```
+### 第三十天
+今天的三个题的难度都很大，主要是是对回溯算法的应用
+[332. Reconstruct Itinerary](https://leetcode.com/problems/reconstruct-itinerary/)    
+看了答案才做出来，有点抽象不是很理解。需要好好再回顾一下。
+```
+class Solution {
+    private LinkedList<String> res;
+    private LinkedList<String> path = new LinkedList<>();
+
+    public List<String> findItinerary(List<List<String>> tickets) {
+        Collections.sort(tickets, (a, b) -> a.get(1).compareTo(b.get(1)));
+        path.add("JFK");
+        boolean[] used = new boolean[tickets.size()];
+        backTracking((ArrayList) tickets, used);
+        return res;
+    }
+
+    public boolean backTracking(ArrayList<List<String>> tickets, boolean[] used) {
+        if (path.size() == tickets.size() + 1) {
+            res = new LinkedList(path);
+            return true;
+        }
+
+        for (int i = 0; i < tickets.size(); i++) {
+            if (!used[i] && tickets.get(i).get(0).equals(path.getLast())) {
+                path.add(tickets.get(i).get(1));
+                used[i] = true;
+
+                if (backTracking(tickets, used)) {
+                    return true;
+                }
+
+                used[i] = false;
+                path.removeLast();
+            }
+        }
+        return false;
+    }
+}
+
+```
+
+[51. N-Queens](https://leetcode.com/problems/n-queens/description/)  
+这个题难度在于如果运用回溯法的话，需要理解什么代表树的宽度，什么代表高度，并且用二维数组来进行判断条件。
+个人认为比上一道题更好理解一些。
+```
+class Solution {
+    
+    private LinkedList<String> one = new LinkedList<>();
+
+    private List<List<String>> ans = new ArrayList<>();
+
+    private boolean[][] used;
+
+    private char[] charArray;
+
+    public List<List<String>> solveNQueens(int n) {
+        used = new boolean[n][n];
+        charArray = new char[n];
+        for(int i = 0; i < n; i++) {
+            charArray[i] = '.';
+        }
+        backtrack(n, 0);
+        return ans;
+    }
+
+    private void backtrack(int n, int deep) {
+        if(deep == n) {
+            ans.add(new ArrayList<>(one));
+            return;
+        }
+
+        for(int i = 0; i < n; i++) {
+            if(!isValid(deep, i, n, used)) {
+                continue;
+            }
+            this.charArray[i] = 'Q';
+            String s = new String(charArray);
+            charArray[i] = '.';
+            one.add(s);
+            used[deep][i] = true;
+            backtrack(n, deep + 1);
+            one.removeLast();
+            used[deep][i] = false;
+        }
+    }
+
+    private boolean isValid(int row, int col, int n, boolean[][] chessboard) {
+        // 检查列
+        for (int i=0; i<row; ++i) { // 相当于剪枝
+            if (chessboard[i][col]) {
+                return false;
+            }
+        }
+
+        // 检查45度对角线
+        for (int i=row-1, j=col-1; i>=0 && j>=0; i--, j--) {
+            if (chessboard[i][j]) {
+                return false;
+            }
+        }
+
+        // 检查135度对角线
+        for (int i=row-1, j=col+1; i>=0 && j<=n-1; i--, j++) {
+            if (chessboard[i][j]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+[37. Sudoku Solver](https://leetcode.com/problems/sudoku-solver/description/)  
+这个题我觉得难点主要是判断是否符合条件上，还有就是如何利用递归来遍历1-9这九个数字，如何与两个for循环结合起来。
+```
+class Solution {
+    public void solveSudoku(char[][] board) {
+        solveSudokuHelper(board);
+    }
+
+    private boolean solveSudokuHelper(char[][] board){
+        //「一个for循环遍历棋盘的行，一个for循环遍历棋盘的列，
+        // 一行一列确定下来之后，递归遍历这个位置放9个数字的可能性！」
+        for (int i = 0; i < 9; i++){ // 遍历行
+            for (int j = 0; j < 9; j++){ // 遍历列
+                if (board[i][j] != '.'){ // 跳过原始数字
+                    continue;
+                }
+                for (char k = '1'; k <= '9'; k++){ // (i, j) 这个位置放k是否合适
+                    if (isValidSudoku(i, j, k, board)){
+                        board[i][j] = k;
+                        if (solveSudokuHelper(board)){ // 如果找到合适一组立刻返回
+                            return true;
+                        }
+                        board[i][j] = '.';
+                    }
+                }
+                // 9个数都试完了，都不行，那么就返回false
+                return false;
+                // 因为如果一行一列确定下来了，这里尝试了9个数都不行，说明这个棋盘找不到解决数独问题的解！
+                // 那么会直接返回， 「这也就是为什么没有终止条件也不会永远填不满棋盘而无限递归下去！」
+            }
+        }
+        // 遍历完没有返回false，说明找到了合适棋盘位置了
+        return true;
+    }
+
+    /**
+     * 判断棋盘是否合法有如下三个维度:
+     *     同行是否重复
+     *     同列是否重复
+     *     9宫格里是否重复
+     */
+    private boolean isValidSudoku(int row, int col, char val, char[][] board){
+        // 同行是否重复
+        for (int i = 0; i < 9; i++){
+            if (board[row][i] == val){
+                return false;
+            }
+        }
+        // 同列是否重复
+        for (int j = 0; j < 9; j++){
+            if (board[j][col] == val){
+                return false;
+            }
+        }
+        // 9宫格里是否重复
+        int startRow = (row / 3) * 3;
+        int startCol = (col / 3) * 3;
+        for (int i = startRow; i < startRow + 3; i++){
+            for (int j = startCol; j < startCol + 3; j++){
+                if (board[i][j] == val){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
 ```
