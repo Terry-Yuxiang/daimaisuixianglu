@@ -5,7 +5,7 @@
 [第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)    [第十八天](#第十八天)
 [第十九天](#第十九天)    [第二十天](#第二十天)      [第二十一天](#第二十一天)	[第二十二天](#第二十二天)	[第二十三天](#第二十三天)
 [第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)	[第二十八天](#第二十八天)
-[第二十九天](#第二十九天)	[第三十天](#第三十天)
+[第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)
 
 ## 数组
 ### 第一天
@@ -2400,4 +2400,96 @@ class Solution {
         return true;
     }
 }
+```
+## 贪心问题
+### 第三十一天
+[455. Assign Cookies](https://leetcode.com/problems/assign-cookies/description/)   
+可以分为优先满足小胃口和优先满足大胃口两种做题思路。
+```
+class Solution {
+    public int findContentChildren(int[] g, int[] s) {
+        Arrays.sort(g);
+        Arrays.sort(s);
+        int indexG = 0;
+        int indexS = 0;
+        int ans = 0;
+        while(indexG < g.length && indexS < s.length) {
+            if (s[indexS] >= g[indexG]) {
+                indexG++;
+                ans++;
+            }
+            indexS++;
+        }
+        return ans;
+    }
+}
+```
+
+[376. Wiggle Subsequence](https://leetcode.com/problems/wiggle-subsequence/description/)  
+```
+class Solution {
+    public int wiggleMaxLength(int[] nums) {
+        if (nums.length <= 1) {
+            return nums.length;
+        }
+        //当前差值
+        int curDiff = 0;
+        //上一个差值
+        int preDiff = 0;
+        int count = 1;
+        for (int i = 1; i < nums.length; i++) {
+            //得到当前差值
+            curDiff = nums[i] - nums[i - 1];
+            //如果当前差值和上一个差值为一正一负
+            //等于0的情况表示初始时的preDiff
+            if ((curDiff > 0 && preDiff <= 0) || (curDiff < 0 && preDiff >= 0)) {
+                count++;
+                preDiff = curDiff;
+            }
+        }
+        return count;
+    }
+}
+```
+
+[53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/description/)  
+用贪心和动态规划都可以很好的完成这个题目。
+```
+// 贪心
+class Solution {
+    public int maxSubArray(int[] nums) {
+        if (nums.length == 1){
+            return nums[0];
+        }
+        int sum = Integer.MIN_VALUE;
+        int count = 0;
+        for (int i = 0; i < nums.length; i++){
+            count += nums[i];
+            sum = Math.max(sum, count); // 取区间累计的最大值（相当于不断确定最大子序终止位置）
+            if (count <= 0){
+                count = 0; // 相当于重置最大子序起始位置，因为遇到负数一定是拉低总和
+            }
+        }
+       return sum;
+    }
+}
+
+// 动态规划
+// DP 方法
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int ans = Integer.MIN_VALUE;
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        ans = dp[0];
+
+        for (int i = 1; i < nums.length; i++){
+            dp[i] = Math.max(dp[i-1] + nums[i], nums[i]);
+            ans = Math.max(dp[i], ans);
+        }
+
+        return ans;
+    }
+}
+
 ```
