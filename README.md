@@ -5,7 +5,7 @@
 [第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)    [第十八天](#第十八天)
 [第十九天](#第十九天)    [第二十天](#第二十天)      [第二十一天](#第二十一天)	[第二十二天](#第二十二天)	[第二十三天](#第二十三天)
 [第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)	[第二十八天](#第二十八天)
-[第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)
+[第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)	[第三十二天](#第三十二天)
 
 ## 数组
 ### 第一天
@@ -2492,4 +2492,115 @@ class Solution {
     }
 }
 
+```
+
+### 第三十二天
+[122. Best Time to Buy and Sell Stock II](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/)  
+这个题是典型的贪心的问题，想要求的最终利益的最大值，可以求的单天利润的大值，即需要把单天利益为正的相加即可。这个题目也可以用动态规划求解。
+```
+class Solution {
+    public int maxProfit(int[] prices) {
+        int ans = 0;
+        for(int i = 1; i < prices.length; i++) {
+            if(prices[i] - prices[i - 1] > 0) {
+                ans += prices[i] - prices[i - 1];
+            }
+        }
+        return ans;
+    }
+}
+```
+
+[55. Jump Game](https://leetcode.com/problems/jump-game/description/)  
+
+```
+class Solution {
+    public boolean canJump(int[] nums) {
+        int maxReach = 0;
+        for(int i = 0; i < nums.length; i++) {
+            if(maxReach >= i) {
+                maxReach = Math.max(maxReach, nums[i] + i);
+                if(maxReach >= nums.length - 1) {
+                    return true;
+                }  
+            }
+        }
+        return false;
+    }
+}
+```
+
+[45. Jump Game II](https://leetcode.com/problems/jump-game-ii/)   
+```
+// 自己写的版本
+class Solution {
+    public int jump(int[] nums) {
+        int ans = 0;
+        int maxReach = 0;
+        for(int i = 0; i < nums.length;) {
+            if(maxReach >= nums.length - 1) {
+                return ans;
+            }
+            int oldMax = maxReach;
+            while(i <= oldMax) {
+                maxReach = Math.max(maxReach, i + nums[i]);
+                i++;
+            }
+            ans++;
+        }
+        return ans;
+    }
+}
+
+// 代码随想录提供的两个版本
+// 版本一
+class Solution {
+    public int jump(int[] nums) {
+        if (nums == null || nums.length == 0 || nums.length == 1) {
+            return 0;
+        }
+        //记录跳跃的次数
+        int count=0;
+        //当前的覆盖最大区域
+        int curDistance = 0;
+        //最大的覆盖区域
+        int maxDistance = 0;
+        for (int i = 0; i < nums.length; i++) {
+            //在可覆盖区域内更新最大的覆盖区域
+            maxDistance = Math.max(maxDistance,i+nums[i]);
+            //说明当前一步，再跳一步就到达了末尾
+            if (maxDistance>=nums.length-1){
+                count++;
+                break;
+            }
+            //走到当前覆盖的最大区域时，更新下一步可达的最大区域
+            if (i==curDistance){
+                curDistance = maxDistance;
+                count++;
+            }
+        }
+        return count;
+    }
+}
+
+// 版本二
+class Solution {
+    public int jump(int[] nums) {
+        int result = 0;
+        // 当前覆盖的最远距离下标
+        int end = 0;
+        // 下一步覆盖的最远距离下标
+        int temp = 0;
+        for (int i = 0; i <= end && end < nums.length - 1; ++i) {
+            temp = Math.max(temp, i + nums[i]);
+            // 可达位置的改变次数就是跳跃次数
+            if (i == end) {
+                end = temp;
+                result++;
+            }
+        }
+        return result;
+    }
+}
+#
 ```
