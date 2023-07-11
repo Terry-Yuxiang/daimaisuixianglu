@@ -5,7 +5,8 @@
 [第十四天](#第十四天)    [第十五天](#第十五天) [第十六天](#第十六天) [第十七天](#第十七天)    [第十八天](#第十八天)
 [第十九天](#第十九天)    [第二十天](#第二十天)      [第二十一天](#第二十一天)	[第二十二天](#第二十二天)	[第二十三天](#第二十三天)
 [第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)	[第二十八天](#第二十八天)
-[第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)	[第三十二天](#第三十二天)
+[第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)	[第三十二天](#第三十二天)	[第三十三天](#第三十三天)
+[第三十四天](#第三十四天)	[第三十五天](#第三十五天)
 
 ## 数组
 ### 第一天
@@ -2602,5 +2603,86 @@ class Solution {
         return result;
     }
 }
-#
+
 ```
+
+### 第三十三天
+休息日
+
+### 第三十四天
+今天继续是贪心问题。   
+[1005. Maximize Sum Of Array After K Negations](https://leetcode.com/problems/maximize-sum-of-array-after-k-negations/description/)  
+```
+class Solution {
+    public int largestSumAfterKNegations(int[] nums, int K) {
+    	// 将数组按照绝对值大小从大到小排序，注意要按照绝对值的大小
+	nums = IntStream.of(nums)
+		     .boxed()
+		     .sorted((o1, o2) -> Math.abs(o2) - Math.abs(o1))
+		     .mapToInt(Integer::intValue).toArray();
+	int len = nums.length;	    
+	for (int i = 0; i < len; i++) {
+	    //从前向后遍历，遇到负数将其变为正数，同时K--
+	    if (nums[i] < 0 && K > 0) {
+	    	nums[i] = -nums[i];
+	    	K--;
+	    }
+	}
+	// 如果K还大于0，那么反复转变数值最小的元素，将K用完
+
+	if (K % 2 == 1) nums[len - 1] = -nums[len - 1];
+	return Arrays.stream(nums).sum();
+
+    }
+}
+```
+[134. Gas Station](https://leetcode.com/problems/gas-station/)  
+这个题的贪心思路不是特别明确，之前做的时候就卡壳了，现在做又卡壳了。下面的答案是局部greedy的，也是传统greedy的思路。还可以用全局贪心做这个题，不过不属于传统贪心的范畴。
+```
+class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int curSum = 0;
+        int totalSum = 0;
+        int index = 0;
+        for (int i = 0; i < gas.length; i++) {
+            curSum += gas[i] - cost[i];
+            totalSum += gas[i] - cost[i];
+            if (curSum < 0) {
+                index = (i + 1); 
+                curSum = 0;
+            }
+        }
+        if (totalSum < 0) return -1;
+        return index;
+    }
+}
+```
+[135. Candy](https://leetcode.com/problems/candy/description/)  
+这个题的核心思想是，把相邻的最大，拆分成从左到右发糖果，如果右边大就多发一个，否则就发一个糖果。和从右往左发糖果，如果左边大就多发一个，否则就发一个糖果的问题。
+```
+class Solution {
+    public int candy(int[] ratings) {
+        int[] candy = new int[ratings.length];
+        candy[0] = 1;
+        for(int i = 1; i < ratings.length; i++) {
+            if(ratings[i] <= ratings[i - 1]) {
+                candy[i] = 1;
+            } else {
+                candy[i] = candy[i - 1] + 1;
+            }
+        }
+        for(int i = ratings.length - 2; i >= 0; i--) {
+            if(ratings[i] > ratings[i + 1]) {
+                candy[i] = Math.max(candy[i + 1] + 1, candy[i]);
+            }
+        }
+        int ans = 0;
+        for(int every : candy) {
+            ans += every;
+        }
+        return ans;
+    }
+}
+```
+
+### 第三十五天
