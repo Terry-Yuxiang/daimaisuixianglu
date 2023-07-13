@@ -2686,3 +2686,51 @@ class Solution {
 ```
 
 ### 第三十五天
+[860. Lemonade Change](https://leetcode.com/problems/lemonade-change/)  
+这个题其实思路很简单，优先找大钱就可以了。
+
+[406. Queue Reconstruction by Height](https://leetcode.com/problems/queue-reconstruction-by-height/)   
+这个题跟135题发糖果很像，分两次排序，每一次都找最优的情况。
+```
+class Solution {
+    public int[][] reconstructQueue(int[][] people) {
+        // 身高从大到小排（身高相同k小的站前面）
+        Arrays.sort(people, (a, b) -> {
+            if (a[0] == b[0]) return a[1] - b[1];   // a - b 是升序排列，故在a[0] == b[0]的狀況下，會根據k值升序排列
+            return b[0] - a[0];   //b - a 是降序排列，在a[0] != b[0]，的狀況會根據h值降序排列
+        });
+
+        LinkedList<int[]> que = new LinkedList<>();
+
+        for (int[] p : people) {
+            que.add(p[1],p);   //Linkedlist.add(index, value)，會將value插入到指定index裡。
+        }
+
+        return que.toArray(new int[people.length][]);
+    }
+}
+```
+[452. Minimum Number of Arrows to Burst Balloons](https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/description/)  
+之前做过一次，这一次自己AC了，但是遇到很多问题，需要注意为了不造成integer overflow，最好用比大小判断，而不要用相减。
+```
+class Solution {
+    public int findMinArrowShots(int[][] points) {
+        Arrays.sort(points, (o1, o2) -> {
+            // 注意这里不能用o1 - o2， 因为可能会造成integer overflow
+            if (o1[1] == o2[1]) return 0;
+            if (o1[1] < o2[1]) return -1;
+            return 1;
+        });
+        int ans = 1;
+        int right = points[0][1];
+        for(int i = 0; i < points.length; i++) {
+            if(right >= points[i][0]) {
+                continue;
+            }
+            ans++;
+            right = points[i][1];
+        }
+        return ans;
+    }
+}
+```
