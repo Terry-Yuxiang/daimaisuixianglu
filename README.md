@@ -2870,4 +2870,62 @@ class Solution {
 ```
 
 ## 动态规划
+动态规划主要分为以下几种问题  
+1.动规基础	2.背包问题	3.打家劫舍	4.股票问题	5.子序列问题
 ### 第三十八天	
+今天开始动态规划的内容，恰好今天的leetcode的每日一题也是一道dynamic programming的题目。
+[509. Fibonacci Number](https://leetcode.com/problems/fibonacci-number/editorial/)   
+经典的dynamic programming题目，也可以用递归来解决。
+```
+class Solution {
+    public int fib(int n) {
+        if(n == 0) return 0;
+        if(n == 1) return 1;
+        int[] dp = new int[n + 1];
+        dp[0] = 0;
+        dp[1] = 1;
+        for(int i = 2; i < n + 1; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
+    }
+}
+```
+
+[70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)   
+这也是经典的dynamic programming的问题。
+```
+class Solution {
+    public int climbStairs(int n) {
+        if(n <= 1) {
+            return 1;
+        }
+        int[] dp = new int[n];
+        dp[0] = 1;
+        dp[1] = 2;
+        for(int i = 2; i < n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n - 1];
+    }
+}
+```
+
+[746. Min Cost Climbing Stairs](https://leetcode.com/problems/min-cost-climbing-stairs/description/)   
+同样的经典的dp问题
+```
+class Solution {
+    public int minCostClimbingStairs(int[] cost) {
+        int n = cost.length;
+        if(n <= 1) return 0;
+        if(n == 2) return Math.min(cost[0], cost[1]);
+        int[] dp = new int[n + 1];
+        dp[0] = 0;
+        dp[1] = 0;
+        for(int i = 2; i < n + 1; i++) {
+            dp[i] = Math.min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2]);
+        }
+        return dp[n];
+    }
+}
+```
