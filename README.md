@@ -6,7 +6,7 @@
 [第十九天](#第十九天)    [第二十天](#第二十天)      [第二十一天](#第二十一天)	[第二十二天](#第二十二天)	[第二十三天](#第二十三天)
 [第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)	[第二十八天](#第二十八天)
 [第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)	[第三十二天](#第三十二天)	[第三十三天](#第三十三天)
-[第三十四天](#第三十四天)	[第三十五天](#第三十五天)
+[第三十四天](#第三十四天)	[第三十五天](#第三十五天)	[第三十六天](#第三十六天)	[第三十七天](#第三十七天)	[第三十八天](#第三十八天)
 
 ## 数组
 ### 第一天
@@ -2734,3 +2734,138 @@ class Solution {
     }
 }
 ```
+
+### 第三十六天
+[435. Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals/)  
+这个题跟432其实很像，但是其实贪心的思路又不太一样。
+为了能够保存最多的时间，想一想，我们应该应该总是把后面overlap的时间去掉，所以队intervals[i][1]进行从小到大的排序。
+这里greedy的思路是，保留越早结束的时间，我们就越有可能在后面不overlap。
+```
+class Solution {
+    public int eraseOverlapIntervals(int[][] intervals) {
+        Arrays.sort(intervals, Comparator.comparingInt(a -> a[1]));
+        int ans = 0;
+        int k = Integer.MIN_VALUE;
+        
+        for (int i = 0; i < intervals.length; i++) {
+            int x = intervals[i][0];
+            int y = intervals[i][1];
+            
+            if (x >= k) {
+                // Case 1
+                k = y;
+            } else {
+                // Case 2
+                ans++;
+            }
+        }
+        
+        return ans;
+    }
+}
+```
+
+[763. Partition Labels](https://leetcode.com/problems/partition-labels/description/)  
+这个题如何区分字母呢，我们需要可以先遍历一遍，找到每个字母的最远位置，再次遍历的时候，如果这个字母所在字符串的最远位置与这个字母的位置相等，则说明可以这样分割。
+```
+class Solution {
+    public List<Integer> partitionLabels(String s) {
+        int[] loc = new int[26];
+        for(int i = 0; i < s.length(); i++) {
+            loc[s.charAt(i) - 'a'] = i;
+        }
+        List<Integer> ans = new ArrayList<>();
+        int left = 0;
+        int right = 0;
+        for(int i = 0; i < s.length(); i++) {
+            right = Math.max(loc[s.charAt(i) - 'a'], right);
+            if(right == i) {
+                ans.add(i - left + 1);
+                left = i + 1;
+            }
+        }
+        return ans;
+    }
+}
+```
+
+[56. Merge Intervals](https://leetcode.com/problems/merge-intervals/)   
+我觉得这个题目贪心的思路还是很好想的，其实跟452和435的思路是很像的，都是先sort，然后利用最大化的思想来完成。
+```
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+        LinkedList<int[]> merged = new LinkedList<>();
+        for (int[] interval : intervals) {
+            // if the list of merged intervals is empty or if the current
+            // interval does not overlap with the previous, simply append it.
+            if (merged.isEmpty() || merged.getLast()[1] < interval[0]) {
+                merged.add(interval);
+            }
+            // otherwise, there is overlap, so we merge the current and previous
+            // intervals.
+            else {
+                merged.getLast()[1] = Math.max(merged.getLast()[1], interval[1]);
+            }
+        }
+        return merged.toArray(new int[merged.size()][]);
+    }
+}
+```
+### 第三十七天
+[738. Monotone Increasing Digits](https://leetcode.com/problems/monotone-increasing-digits/description/)     
+这个题想到了贪心的思路，但是没想清楚怎么处理类似于数字'989998'这样的问题。看了代码随想录的答案，可以记录一下9的位置，让其后都是9，之后再填充。
+```
+class Solution {
+    public int monotoneIncreasingDigits(int n) {
+        String s = String.valueOf(n);
+        char[] chars = s.toCharArray();
+        int start = s.length();
+        for (int i = s.length() - 2; i >= 0; i--) {
+            if (chars[i] > chars[i + 1]) {
+                chars[i]--;
+                start = i+1;
+            }
+        }
+        for (int i = start; i < s.length(); i++) {
+            chars[i] = '9';
+        }
+        return Integer.parseInt(String.valueOf(chars));
+    }
+}
+```
+
+[968. Binary Tree Cameras](https://leetcode.com/problems/binary-tree-cameras/) 
+本题是贪心和二叉树的一个结合
+```
+class Solution {
+    int ans;
+    Set<TreeNode> covered;
+    public int minCameraCover(TreeNode root) {
+        ans = 0;
+        covered = new HashSet();
+        covered.add(null);
+
+        dfs(root, null);
+        return ans;
+    }
+
+    public void dfs(TreeNode node, TreeNode par) {
+        if (node != null) {
+            dfs(node.left, node);
+            dfs(node.right, node);
+
+            if (par == null && !covered.contains(node) ||
+                    !covered.contains(node.left) ||
+                    !covered.contains(node.right)) {
+                ans++;
+                covered.add(node);
+                covered.add(par);
+                covered.add(node.left);
+                covered.add(node.right);
+            }
+        }
+    }
+}
+```
+### 第三十八天	
