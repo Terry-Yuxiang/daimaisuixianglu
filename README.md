@@ -7,6 +7,7 @@
 [第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)	[第二十八天](#第二十八天)
 [第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)	[第三十二天](#第三十二天)	[第三十三天](#第三十三天)
 [第三十四天](#第三十四天)	[第三十五天](#第三十五天)	[第三十六天](#第三十六天)	[第三十七天](#第三十七天)	[第三十八天](#第三十八天)
+[第三十九天](#第三十九天)	[第四十天](#第四十天)
 
 ## 数组
 ### 第一天
@@ -2926,6 +2927,57 @@ class Solution {
             dp[i] = Math.min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2]);
         }
         return dp[n];
+    }
+}
+```
+
+### 第三十九天
+[62. Unique Paths](https://leetcode.com/problems/unique-paths/description/)   
+从做题到现在做了不少动态规划的题目了，这个题相对比较简单，轻松拿下。
+```
+class Solution {
+    public int uniquePaths(int m, int n) {
+        int[][] dp = new int[m][n];
+        dp[0][0] = 1;
+        for(int i = 0; i < m; i ++) {
+            for(int j = 0; j < n; j++) {
+                if(j - 1 >= 0) {
+                    dp[i][j] += dp[i][j - 1];
+                }
+                if(i - 1 >= 0) {
+                    dp[i][j] += dp[i - 1][j];
+                }
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+}
+```
+
+[63. Unique Paths II](https://leetcode.com/problems/unique-paths-ii/)   
+这个题可以说跟62基本一摸一样，多的一点点难度就是obstacle处不能走，为0.
+```
+class Solution {
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        int[][] dp = new int[m][n];
+        dp[0][0] = 1;
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(obstacleGrid[i][j] == 1) {
+                    dp[i][j] = 0;
+                    continue;
+                }
+                if(i - 1 >= 0) {
+                    dp[i][j] += dp[i - 1][j];
+                }
+                if(j - 1 >= 0) {
+                    dp[i][j] += dp[i][j - 1];
+                }
+            }
+        }
+        return dp[m - 1][n - 1];
     }
 }
 ```
