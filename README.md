@@ -11,6 +11,80 @@
 
 ## 数组
 ### 第一天
+[704. Binary Search](https://leetcode.com/problems/binary-search/description/)  
+二分查找，很基础的题。需要注意的是区间问题。到底是闭区间，还是半开半闭区间
+```
+// 开区间
+class Solution {
+    public int search(int[] nums, int target) {
+        if(nums.length == 0) {
+            return - 1;
+        }
+        int left = 0;
+        int right = nums.length - 1;
+        while(left <= right) {
+            int mid = left + (right - left) / 2;
+            if(nums[mid] < target) {
+                left = mid + 1;
+            } else if(nums[mid] > target){
+                right = mid - 1;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
+        
+    }
+}
+// 半闭半开
+class Solution {
+    public int search(int[] nums, int target) {
+        if(nums.length == 0) {
+            return - 1;
+        }
+        int left = 0;
+        int right = nums.length;
+        while(left < right) {
+            int mid = left + (right - left) / 2;
+            if(nums[mid] < target) {
+                left = mid + 1;
+            } else if(nums[mid] > target){
+                right = mid;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
+        
+    }
+}
+```
+[27. Remove Element](https://leetcode.com/problems/remove-element/description/)   
+这个题是双指针法的典型实现，其实双指针在某种程度上来说跟sliding window也很像。
+```
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int n = nums.length;
+        int left= 0;
+        int right = n - 1;
+        int ans = 0;
+        while(left <= right) {
+            while(left <= right && nums[right] == val) {
+                right--;
+                ans++;
+            }
+            if(left <= right && nums[left] == val) {
+                nums[left] = nums[right];
+                nums[right] = val;
+                right--;
+                ans++;
+            }
+            left++;
+        }
+        return n - ans;
+    }
+}
+```
 
 ### 第二天
 
