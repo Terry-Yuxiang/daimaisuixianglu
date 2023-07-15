@@ -87,6 +87,76 @@ class Solution {
 ```
 
 ### 第二天
+[977. Squares of a Sorted Array](https://leetcode.com/problems/squares-of-a-sorted-array/description/)  
+双指针的题目。用二分法找到最接近0的值是logn，这样做下来是n+logn，如果用for循环找就是2n了。如果是平方再排序那就是n+nlogn，比用双指针要慢很多。
+```
+class Solution {
+    public int[] sortedSquares(int[] nums) {
+        int n = nums.length;
+        int left = 0;
+        int right = n;
+        int mid = -1;
+        while(left < right) {
+            mid = left + (right - left) / 2;
+            if(nums[mid] > 0) {
+                right = mid;
+            } else if (nums[mid] < 0){
+                left = mid + 1;
+            } else {
+                right = mid;
+                left = mid - 1;
+                break;
+            }
+        }
+        left = right - 1;
+
+        
+        int[] ans = new int[n];
+        int i = 0;
+        while(left >= 0 || right < n) {
+            if(left >= 0 && right < n) {
+                if(Math.abs(nums[left]) <= Math.abs(nums[right])) {
+                    ans[i] = nums[left] * nums[left];
+                    left--;
+                } else {
+                    ans[i] = nums[right] * nums[right];
+                    right++;
+                }
+            } else if(left >= 0){
+                ans[i] = nums[left] * nums[left];
+                left--;
+            } else {
+                ans[i] = nums[right] * nums[right];
+                right++;
+            }
+            i++;
+        }
+        return ans;
+    }
+}
+```
+
+[209. Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/description/)   
+sliding window的题目，跟双指针有很大的关系。
+```
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int ans = Integer.MAX_VALUE;
+        int left = 0;
+        int right = 0;
+        while(right < nums.length && left <= right) {
+            target -= nums[right];
+            while(target <= 0) {
+                ans = Math.min(ans, right - left + 1);
+                target += nums[left];
+                left++;
+            }
+            right++;
+        }
+        return ans == Integer.MAX_VALUE ? 0 : ans;
+    }
+}
+```
 
 ## 链表
 ### 第三天
