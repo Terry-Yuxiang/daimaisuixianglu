@@ -3163,3 +3163,50 @@ class Solution {
     }
 }
 ```
+[96. Unique Binary Search Trees](https://leetcode.com/problems/unique-binary-search-trees/description/)   
+这个题自己花了不到10分钟ac了，主要是做了343题得到了一点点思路，感觉坐动态规划慢慢找到感觉了。
+自己写的时候把dp[0]写成0了，这样在双for循环中需要加条件判断，其实可以写成dp[0]是1，因为其实没有node只有一种情况。
+```
+class Solution {
+    public int numTrees(int n) {
+        if(n == 0) return 0;
+        if(n == 1) return 1;
+        if(n == 2) return 2;
+        int[] dp = new int[n + 1];
+        dp[0] = 0; 
+        dp[1] = 1;
+        dp[2] = 2;
+        for(int i = 3; i < n + 1; i++) {
+            for(int j = 1; j <= i; j++) {
+                if(j == 1) {
+                    dp[i] += dp[i - j];
+                    continue;
+                }
+                if(j == i) {
+                    dp[i] += dp[j - 1]; 
+                    continue;
+                } 
+                dp[i] += dp[j - 1] * dp[i - j];
+            }
+        }
+        return dp[n];
+    }
+}
+
+// 改进版
+class Solution {
+    public int numTrees(int n) {
+        if(n == 0) return 1;
+        if(n == 1) return 1;
+        int[] dp = new int[n + 1];
+        dp[0] = 1; 
+        dp[1] = 1;
+        for(int i = 2; i < n + 1; i++) {
+            for(int j = 1; j <= i; j++) {
+                dp[i] += dp[j - 1] * dp[i - j];
+            }
+        }
+        return dp[n];
+    }
+}
+```
