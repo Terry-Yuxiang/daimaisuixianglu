@@ -7,7 +7,7 @@
 [第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)	[第二十八天](#第二十八天)
 [第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)	[第三十二天](#第三十二天)	[第三十三天](#第三十三天)
 [第三十四天](#第三十四天)	[第三十五天](#第三十五天)	[第三十六天](#第三十六天)	[第三十七天](#第三十七天)	[第三十八天](#第三十八天)
-[第三十九天](#第三十九天)	[第四十天](#第四十天)
+[第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)
 
 ## 数组
 ### 第一天
@@ -3122,6 +3122,44 @@ class Solution {
             }
         }
         return dp[m - 1][n - 1];
+    }
+}
+```
+
+### 第四十天
+休息日
+
+### 第四十一天
+[343. Integer Break](https://leetcode.com/problems/integer-break/)   
+这个整数拆分的题目，看到没什么思路，直接看题解了。
+```
+class Solution {
+    public int integerBreak(int n) {
+        int[] dp = new int[n + 1];
+        dp[2] = 1;
+        for(int i = 3; i < n + 1; i++) {
+            for(int j = 1; j <= i / 2; j++) {
+                dp[i] = Math.max(dp[i], Math.max((i - j) * j, dp[i - j] * j));
+            }
+        }
+        return dp[n];
+    }
+}
+```
+这个题目还有个greedy的做法，就是把数字拆成3的倍数，余下的数跟3相乘是乘积最大的。但这个没看数学证明，可以记一下结论，不具有普遍性。
+```
+class Solution {
+    public int integerBreak(int n) {
+        if(n == 2) return 1;
+        if(n == 3) return 2;
+        if(n == 4) return 4;
+        int result = 1;
+        while(n > 4) {
+            result *= 3;
+            n -= 3;
+        }
+        result *= n;
+        return result;
     }
 }
 ```
