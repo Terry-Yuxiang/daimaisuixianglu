@@ -7,7 +7,7 @@
 [第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)	[第二十八天](#第二十八天)
 [第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)	[第三十二天](#第三十二天)	[第三十三天](#第三十三天)
 [第三十四天](#第三十四天)	[第三十五天](#第三十五天)	[第三十六天](#第三十六天)	[第三十七天](#第三十七天)	[第三十八天](#第三十八天)
-[第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)
+[第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)	[第四十二天](#第四十二天)
 
 ## 数组
 ### 第一天
@@ -3207,6 +3207,59 @@ class Solution {
             }
         }
         return dp[n];
+    }
+}
+```
+
+### 第四十二天
+今天开始背包问题，首先要理解的是[01背包问题]。
+可以用[二维数组](https://programmercarl.com/%E8%83%8C%E5%8C%85%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%8001%E8%83%8C%E5%8C%85-1.html)和[一维的简化数组](https://programmercarl.com/%E8%83%8C%E5%8C%85%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%8001%E8%83%8C%E5%8C%85-2.html)
+[416. Partition Equal Subset Sum](https://leetcode.com/problems/partition-equal-subset-sum/description/)   
+我觉得这个题的重点是怎么转换成背包问题来做。下面第一个是自己写的答案，可以看一下leetcode给的答案，直接用boolean数组来计算，更巧妙一些。
+```
+class Solution {
+    public boolean canPartition(int[] nums) {
+        int sum = 0;
+        for(int num : nums) {
+            sum += num;
+        }
+        if(sum % 2 == 1) {
+            return false;
+        }
+        int target = sum / 2;
+        int[] dp = new int[target + 1];
+        for(int i = 0; i < nums.length; i++) {
+            for(int j = target; j >= 0; j--) {
+                if(nums[i] <= j) {
+                    dp[j] = Math.max(dp[j], dp[j - nums[i]] + nums[i]);
+                    if(dp[j] == target) return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+
+class Solution {
+    public boolean canPartition(int[] nums) {
+        if (nums.length == 0)
+            return false;
+        int totalSum = 0;
+        // find sum of all array elements
+        for (int num : nums) {
+            totalSum += num;
+        }
+        // if totalSum is odd, it cannot be partitioned into equal sum subset
+        if (totalSum % 2 != 0) return false;
+        int subSetSum = totalSum / 2;
+        boolean dp[] = new boolean[subSetSum + 1];
+        dp[0] = true;
+        for (int curr : nums) {
+            for (int j = subSetSum; j >= curr; j--) {
+                dp[j] |= dp[j - curr];
+            }
+        }
+        return dp[subSetSum];
     }
 }
 ```
