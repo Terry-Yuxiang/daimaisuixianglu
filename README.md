@@ -7,8 +7,7 @@
 [第二十四天](#第二十四天) 	[第二十五天](#第二十五天) [第二十六天](#第二十六天)	[第二十七天](#第二十七天)	[第二十八天](#第二十八天)
 [第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)	[第三十二天](#第三十二天)	[第三十三天](#第三十三天)
 [第三十四天](#第三十四天)	[第三十五天](#第三十五天)	[第三十六天](#第三十六天)	[第三十七天](#第三十七天)	[第三十八天](#第三十八天)
-[第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)	[第四十二天](#第四十二天)
-
+[第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)	[第四十二天](#第四十二天)	[第四十三天](#第四十三天)
 ## 数组
 ### 第一天
 [704. Binary Search](https://leetcode.com/problems/binary-search/description/)  
@@ -506,7 +505,7 @@ public class Solution {
 
 ## 字符串
 ### 第八天
-344. Reverse String  
+[344. Reverse String](https://leetcode.com/problems/reverse-string/)   
 在这个题目比较简单，在这里写一种位运算的swap方法
 ```
 class Solution {
@@ -523,7 +522,7 @@ class Solution {
     }
 }
 ```
-541. Reverse String II  
+[541. Reverse String II](https://leetcode.com/problems/reverse-string-ii/description/)  
 重点在于如何处理2k。
  ```
  class Solution {
@@ -541,7 +540,7 @@ class Solution {
     }
 }
  ```
-剑指 Offer 05. 替换空格. 
+[剑指 Offer 05. 替换空格.](https://leetcode.cn/problems/ti-huan-kong-ge-lcof/) 
 申请额外空间的方法很简单，还有一种做法是先扩充数组，再从后向前用双指针替换空格。    
 ```
 class Solution {
@@ -580,7 +579,7 @@ class Solution {
     }
 }
 ```
-151. Reverse Words in a String
+[151. Reverse Words in a String](https://leetcode.com/problems/reverse-words-in-a-string/)   
 这个题如果用Java的内部方法，分割空格再反转就很简单。主要考虑一下如何不适用额外的空间完成。
 ```
 class Solution {
@@ -681,7 +680,9 @@ class Solution {
 
 ### 第九天   
 今天的重点是KMP算法，并且回顾一下双指针。  
-28. Find the Index of the First Occurrence in a String
+[28. Find the Index of the First Occurrence in a String](https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/)   
+
+
 ```
 // KMP算法，构造next数组
 class Solution {
@@ -723,7 +724,7 @@ class Solution {
     }
 }
 ```
-459. Repeated Substring Pattern.  
+[459. Repeated Substring Pattern.](https://leetcode.com/problems/repeated-substring-pattern/)    
 这个题目有两种做法，一种是掐头去尾，把两个相同的字符串s加起来，如果掐头去尾后仍然有s，则有repeat。
 第二种则是经典的KMP算法。最长相同前后缀的不重合部分则是最小重复子串。
 ```
@@ -3260,6 +3261,87 @@ class Solution {
             }
         }
         return dp[subSetSum];
+    }
+}
+```
+
+### 第四十三天
+[1049. Last Stone Weight II](https://leetcode.com/problems/last-stone-weight-ii/)   
+这个题一开始其实没什么思路，看了卡哥的提示，说跟416题差不多，想到思路。
+其实就是把石头分成两堆，让两堆尽可能相等。换言之，就是找到一组石头，让他越接近石头总weight的一半。也就转换成了背包问题，背包的容量是sum/2，物品的value是就是石头的weight，找到如何在有限空间内放入value最大的石头。
+```
+class Solution {
+    public int lastStoneWeightII(int[] stones) {
+        
+        int sum = 0;
+        for(int i = 0; i < stones.length; i++) {
+            sum += stones[i];
+        }
+        int target = sum / 2;
+        int[] dp = new int[target + 1];
+        dp[0] = 0;
+        for(int i = 0; i < stones.length; i++) {
+            for(int j = target; j >= 0; j--) {
+                if(j - stones[i] >= 0) {
+                    dp[j] = Math.max(dp[j], dp[j - stones[i]] + stones[i]);
+                }      
+            }
+        }
+
+        return Math.abs(sum - dp[target] - dp[target]);
+    }
+}
+```
+[494. Target Sum](https://leetcode.com/problems/target-sum/description/)   
+这个题目很容易想到暴力的回溯法，卡哥说会超时，但实际在leetcode通过了。   
+如果是背包问题是容量为i的背包，必须把i装满，问有几种装法，这就跟之前的容量为i，能放入的value最大是多少不太一样了。一开始就没什么思路。
+那么现在dp[j]就变成了填满j的背包有几种方法，就变成了累加。从0-i的nums一个个试，这样累加，空间复杂度是O(n x m)
+```
+class Solution {
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0;
+        for (int i = 0; i < nums.length; i++) sum += nums[i];
+	//如果target过大 sum将无法满足
+        if ( target < 0 && sum < -target) return 0;
+        if ((target + sum) % 2 != 0) return 0;
+        int size = (target + sum) / 2;
+        if(size < 0) size = -size;
+        int[] dp = new int[size + 1];
+        dp[0] = 1;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = size; j >= nums[i]; j--) {
+                dp[j] += dp[j - nums[i]];
+            }
+        }
+        return dp[size];
+    }
+}
+
+```
+
+[474. Ones and Zeroes](https://leetcode.com/problems/ones-and-zeroes/description/)  
+这个题如何主要难点在于把1和0的个数看成一个物品的两个维度，转换成一个01背包问题。
+```
+class Solution {
+    public int findMaxForm(String[] strs, int m, int n) {
+        int[][] dp = new int[m + 1][n + 1];
+        dp[0][0] = 0;
+        for(int index = 0; index < strs.length; index++) {
+            int numZero = 0;
+            int numOne = 0;
+            String s = strs[index];
+            for(int i = 0; i < s.length(); i++) {
+                if(s.charAt(i) == '1')  numOne++;
+                if(s.charAt(i) == '0')  numZero++;
+            }
+            for(int i = m; i >= numZero; i--) {
+                for(int j = n; j >= numOne; j--) {
+                    dp[i][j] = Math.max(dp[i][j], dp[i - numZero][j - numOne] + 1);
+                }
+            }
+        }
+        return dp[m][n];
+        
     }
 }
 ```
