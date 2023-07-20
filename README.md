@@ -8,6 +8,7 @@
 [第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)	[第三十二天](#第三十二天)	[第三十三天](#第三十三天)
 [第三十四天](#第三十四天)	[第三十五天](#第三十五天)	[第三十六天](#第三十六天)	[第三十七天](#第三十七天)	[第三十八天](#第三十八天)
 [第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)	[第四十二天](#第四十二天)	[第四十三天](#第四十三天)
+[第四十四天](#第四十四天)
 ## 数组
 ### 第一天
 [704. Binary Search](https://leetcode.com/problems/binary-search/description/)  
@@ -3344,4 +3345,57 @@ class Solution {
         
     }
 }
+```
+## 完全背包问题
+### 第四十四天
+今天进入完全背包的专题。[理论概念看这里](https://programmercarl.com/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98%E7%90%86%E8%AE%BA%E5%9F%BA%E7%A1%80%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85.html#%E5%AE%8C%E5%85%A8%E8%83%8C%E5%8C%85)   
+完全背包和01背包最主要的区别是，每个物品有无限多个。这就决定了如果用一维数组的话背包要从小到大遍历，因为每一个物品可以放无限多次。回忆一下，在01背包问题中，背包容量是从大到小遍历的，这样保证每个物品只最多存放一次。   
+
+[518. Coin Change II](https://leetcode.com/problems/coin-change-ii/)    
+这个是一个完全背包的组合问题。
+```
+// 如果求组合数就是外层for循环遍历物品，内层for遍历背包。
+
+// 如果求排列数就是外层for遍历背包，内层for循环遍历物品。
+
+
+class Solution {
+    public int change(int amount, int[] coins) {
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;
+        for(int i = 0; i < coins.length; i++) {
+            for(int j = 1; j <= amount; j++) {
+                if(j - coins[i] >= 0) {
+                    dp[j] = dp[j] + dp[j - coins[i]];
+                }
+            }
+        }
+        return dp[amount];
+    }
+}
+```
+
+[377. Combination Sum IV](https://leetcode.com/problems/combination-sum-iv/description/)   
+这个是一个完全背包的排列问题。
+
+```
+// 如果求组合数就是外层for循环遍历物品，内层for遍历背包。
+
+// 如果求排列数就是外层for遍历背包，内层for循环遍历物品。
+
+class Solution {
+    public int combinationSum4(int[] nums, int target) {
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        for(int j = 1; j < target + 1; j++) {
+            for(int i = 0; i < nums.length; i++) {
+                if(j - nums[i] >= 0) {
+                    dp[j] = dp[j] + dp[j - nums[i]];
+                }
+            }
+        }
+        return dp[target];
+    }
+}
+
 ```
