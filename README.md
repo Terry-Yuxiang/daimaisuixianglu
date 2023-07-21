@@ -8,7 +8,7 @@
 [第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)	[第三十二天](#第三十二天)	[第三十三天](#第三十三天)
 [第三十四天](#第三十四天)	[第三十五天](#第三十五天)	[第三十六天](#第三十六天)	[第三十七天](#第三十七天)	[第三十八天](#第三十八天)
 [第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)	[第四十二天](#第四十二天)	[第四十三天](#第四十三天)
-[第四十四天](#第四十四天)
+[第四十四天](#第四十四天)	[第四十五天](#第四十五天)
 ## 数组
 ### 第一天
 [704. Binary Search](https://leetcode.com/problems/binary-search/description/)  
@@ -3399,3 +3399,51 @@ class Solution {
 }
 
 ```
+
+### 第四十五天
+今天用完全背包问题的思路来做几道题
+[70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)  
+这个题之前做过，这次用完全背包思路的动归思想来做一下。按照完全背包的思想，这是一个组合的完全背包。
+
+
+[322. Coin Change](https://leetcode.com/problems/coin-change/)  
+这个题是排列的完全背包。
+```
+class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, amount + 1);
+        dp[0] = 0;
+        for(int j = 0; j < coins.length; j++) {
+            for(int i = 1; i <= amount; i++) {
+                if(i - coins[j] >=0) {
+                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
+                }
+            }
+        }
+        return dp[amount] == amount + 1 ? -1 : dp[amount];
+    }
+}
+```
+
+[279. Perfect Squares](https://leetcode.com/problems/perfect-squares/description/)  
+感觉这个题跟上一道322. Coin change没有什么区别，唯一不同是需要自己找到最大值。也就是多一个开平方的步骤。
+```
+class Solution {
+    public int numSquares(int n) {
+        double max = Math.sqrt(n);
+        int[] dp= new int[n + 1];
+        Arrays.fill(dp, n);
+        dp[0] = 0;
+        for(int i = 1; i <= max; i++) {
+            for(int j = 1; j < n + 1; j++) {
+                if(j - i * i>=0) {
+                    dp[j] = Math.min(dp[j], dp[j - i * i] + 1);
+                } 
+            }
+        }
+        return dp[n];
+    }
+}
+```
+
