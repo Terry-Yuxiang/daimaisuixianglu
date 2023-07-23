@@ -8,7 +8,7 @@
 [第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)	[第三十二天](#第三十二天)	[第三十三天](#第三十三天)
 [第三十四天](#第三十四天)	[第三十五天](#第三十五天)	[第三十六天](#第三十六天)	[第三十七天](#第三十七天)	[第三十八天](#第三十八天)
 [第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)	[第四十二天](#第四十二天)	[第四十三天](#第四十三天)
-[第四十四天](#第四十四天)	[第四十五天](#第四十五天)
+[第四十四天](#第四十四天)	[第四十五天](#第四十五天)	[第四十六天](#第四十六天)
 ## 数组
 ### 第一天
 [704. Binary Search](https://leetcode.com/problems/binary-search/description/)  
@@ -3443,6 +3443,30 @@ class Solution {
             }
         }
         return dp[n];
+    }
+}
+```
+
+### 第四十六天
+今天是多重背包问题，多重背包在leetcode上没有完全对应的题目。多重背包可以把m个数量的产品展开成m个不同的，这样就变成了01背包问题。
+[139. Word Break](https://leetcode.com/problems/word-break/submissions/)   
+这个题其实是完全背包问题，并不属于多重背包。感觉完全背包很容易看出来，但是遍历和dp的定义不是很好想。
+```
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> set = new HashSet<>(wordDict);
+        boolean[] valid = new boolean[s.length() + 1];
+        valid[0] = true;
+
+        for (int i = 1; i <= s.length(); i++) {
+            for (int j = 0; j < i && !valid[i]; j++) {
+                if (set.contains(s.substring(j, i)) && valid[j]) {
+                    valid[i] = true;
+                }
+            }
+        }
+
+        return valid[s.length()];
     }
 }
 ```
