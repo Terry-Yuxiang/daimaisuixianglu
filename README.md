@@ -8,7 +8,7 @@
 [第二十九天](#第二十九天)	[第三十天](#第三十天)	[第三十一天](#第三十一天)	[第三十二天](#第三十二天)	[第三十三天](#第三十三天)
 [第三十四天](#第三十四天)	[第三十五天](#第三十五天)	[第三十六天](#第三十六天)	[第三十七天](#第三十七天)	[第三十八天](#第三十八天)
 [第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)	[第四十二天](#第四十二天)	[第四十三天](#第四十三天)
-[第四十四天](#第四十四天)	[第四十五天](#第四十五天)	[第四十六天](#第四十六天)
+[第四十四天](#第四十四天)	[第四十五天](#第四十五天)	[第四十六天](#第四十六天)	[第四十七天](#第四十七天)	[第四十八天](#第四十八天)
 ## 数组
 ### 第一天
 [704. Binary Search](https://leetcode.com/problems/binary-search/description/)  
@@ -3470,4 +3470,74 @@ class Solution {
     }
 }
 ```
+### 第四十七天
 
+### 第四十八天
+[198. House Robber](https://leetcode.com/problems/house-robber/description/)   
+打家劫舍的经典题目
+```
+class Solution {
+    public int rob(int[] nums) {
+        int n = nums.length;
+        if(n < 2) {
+            return nums[0];
+        }
+        int[] dp = new int[n];
+        dp[0] = nums[0];
+        dp[1] = Math.max(dp[0], nums[1]);
+        for(int i = 2; i < n; i++) {
+            dp[i] = Math.max(dp[i - 2] + nums[i], dp[i - 1]);
+        }
+        return dp[n - 1];
+    }
+}
+```
+
+[213. House Robber II](https://leetcode.com/problems/house-robber-ii/)  
+与上一个题很像，但是这个成环了。所以可以分成两种情况，一种不包含下标为0，一种不包含下下标为n-1，这样就跟198一样了。
+```
+class Solution {
+    public int rob(int[] nums) {
+        if (nums == null || nums.length == 0)
+            return 0;
+        int len = nums.length;
+        if (len == 1)
+            return nums[0];
+        return Math.max(robAction(nums, 0, len - 1), robAction(nums, 1, len));
+    }
+
+    int robAction(int[] nums, int start, int end) {
+        int x = 0, y = 0, z = 0;
+        for (int i = start; i < end; i++) {
+            y = z;
+            z = Math.max(y, x + nums[i]);
+            x = y;
+        }
+        return z;
+    }
+}
+```
+
+[337. House Robber III](https://leetcode.com/problems/house-robber-iii/description/)   
+树形dp，还是很重要的。
+```
+class Solution {
+    public int rob(TreeNode root) {
+        int[] res = robAction1(root);
+        return Math.max(res[0], res[1]);
+    }
+
+    int[] robAction1(TreeNode root) {
+        int res[] = new int[2];
+        if (root == null)
+            return res;
+
+        int[] left = robAction1(root.left);
+        int[] right = robAction1(root.right);
+
+        res[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        res[1] = root.val + left[0] + right[0];
+        return res;
+    }
+}
+```
