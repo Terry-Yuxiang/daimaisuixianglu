@@ -9,6 +9,7 @@
 [第三十四天](#第三十四天)	[第三十五天](#第三十五天)	[第三十六天](#第三十六天)	[第三十七天](#第三十七天)	[第三十八天](#第三十八天)
 [第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)	[第四十二天](#第四十二天)	[第四十三天](#第四十三天)
 [第四十四天](#第四十四天)	[第四十五天](#第四十五天)	[第四十六天](#第四十六天)	[第四十七天](#第四十七天)	[第四十八天](#第四十八天)
+[第四十九天](#第四十九天)
 ## 数组
 ### 第一天
 [704. Binary Search](https://leetcode.com/problems/binary-search/description/)  
@@ -3540,4 +3541,73 @@ class Solution {
         return res;
     }
 }
+```
+
+### 第四十九天
+[121. Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/)   
+感觉这个题用动态规划做不是很好，仔细思考一下，一个二维数组储存，其实就是一列是最小值，一列是差的最大值。跟贪心是一样的，还浪费了空间。
+```
+// 动态规划
+class Solution {
+    public int maxProfit(int[] prices) {
+        int[][] dp = new int[prices.length][2];
+        dp[0][0] = -prices[0];
+        dp[0][1] = 0;
+        for(int i = 1; i < prices.length; i++) {
+            dp[i][0] = Math.max(dp[i - 1][0], -prices[i]);
+            dp[i][1] = Math.max(dp[i - 1][1], prices[i] + dp[i][0]);
+        }
+        return dp[prices.length - 1][1];
+    }
+}
+
+// 贪心
+class Solution {
+    public int maxProfit(int[] prices) {
+        int buyDay = Integer.MAX_VALUE;
+        int ans = 0;
+        for(int i = 0; i < prices.length; i++) {
+            if(prices[i] < buyDay) {
+                buyDay = prices[i];
+            }
+            ans = Math.max(ans, prices[i] - buyDay);
+        }
+        return ans;
+    }
+}
+
+```
+
+[122. Best Time to Buy and Sell Stock II](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/description/)   
+这个题也是dp和greedy两种思路
+```
+// dp
+class Solution {
+    public int maxProfit(int[] prices) {
+        int n = prices.length;
+        int[] dp = new int[n];
+        dp[0] = 0;
+        for(int i = 1; i < n; i++) {
+            int dif = prices[i] - prices[i - 1];
+            dp[i] = Math.max(dp[i - 1], dp[i - 1] + dif);
+        }
+        return dp[n - 1];
+    }
+}
+
+// Greedy
+class Solution {
+    public int maxProfit(int[] prices) {
+        int profit = 0;
+        for(int i = 1; i < prices.length; i++) {
+            int dif = prices[i] - prices[i - 1];
+            if(dif > 0) {
+                profit += dif;
+            }
+        }
+        return profit;
+    }
+}
+
+
 ```
