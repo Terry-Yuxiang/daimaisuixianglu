@@ -9,7 +9,7 @@
 [第三十四天](#第三十四天)	[第三十五天](#第三十五天)	[第三十六天](#第三十六天)	[第三十七天](#第三十七天)	[第三十八天](#第三十八天)
 [第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)	[第四十二天](#第四十二天)	[第四十三天](#第四十三天)
 [第四十四天](#第四十四天)	[第四十五天](#第四十五天)	[第四十六天](#第四十六天)	[第四十七天](#第四十七天)	[第四十八天](#第四十八天)
-[第四十九天](#第四十九天)
+[第四十九天](#第四十九天)	[第五十天](#第五十天)
 ## 数组
 ### 第一天
 [704. Binary Search](https://leetcode.com/problems/binary-search/description/)  
@@ -3610,4 +3610,104 @@ class Solution {
 }
 
 
+```
+
+
+### 第五十天
+[123. Best Time to Buy and Sell Stock III](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/description/)   
+这个题的难度比较高，因为限制了只能买卖两次。
+```
+class Solution {
+    public int maxProfit(int[] prices) {
+        int len = prices.length;
+        // 边界判断, 题目中 length >= 1, 所以可省去
+        if (prices.length == 0) return 0;
+
+        /*
+         * 定义 5 种状态:
+         * 0: 没有操作, 1: 第一次买入, 2: 第一次卖出, 3: 第二次买入, 4: 第二次卖出
+         */
+        int[][] dp = new int[len][5];
+        dp[0][1] = -prices[0];
+        // 初始化第二次买入的状态是确保 最后结果是最多两次买卖的最大利润
+        dp[0][3] = -prices[0];
+
+        for (int i = 1; i < len; i++) {
+            dp[i][1] = Math.max(dp[i - 1][1], -prices[i]);
+            dp[i][2] = Math.max(dp[i - 1][2], dp[i - 1][1] + prices[i]);
+            dp[i][3] = Math.max(dp[i - 1][3], dp[i - 1][2] - prices[i]);
+            dp[i][4] = Math.max(dp[i - 1][4], dp[i - 1][3] + prices[i]);
+        }
+
+        return dp[len - 1][4];
+    }
+}
+```
+
+[]()
+
+```
+
+```
+### 第五十一天
+
+[309. Best Time to Buy and Sell Stock with Cooldown](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/description/)   
+这个题的难度主要是在于在卖出股票后有一天的冷冻期。  
+为了好理解，carl哥在讲解的时候用了四种状态，leetcode的原题用了三种状态来做的。四种状态的思路很清晰，三种状态如果画出state machine其实也是很好理解并写出代码的。在这里附上三种答案。
+1.四种状态的dp数组  
+2.三种状态的dp数组
+3.三种状态不用dp数组
+```
+class Solution {
+    public int maxProfit(int[] prices) {
+      int n = prices.length;
+        int[][] dp = new int[prices.length][4];
+        dp[0][0] = -prices[0];
+        dp[0][1] = 0;
+        dp[0][2] = 0;
+        dp[0][3] = 0;
+        for(int i = 1; i < n; i++) {
+          dp[i][0] = Math.max(dp[i - 1][0], Math.max(dp[i - 1][1] - prices[i], dp[i - 1][3] - prices[i]));
+          dp[i][1] = Math.max(dp[i - 1][1], dp[i - 1][3]);
+          dp[i][2] = dp[i][0] + prices[i];
+          dp[i][3] = dp[i - 1][2];
+        }
+        return Math.max(dp[n -1][1],Math.max(dp[n - 1][3], dp[n - 1][2]));
+    }
+}
+
+class Solution {
+  public int maxProfit(int[] prices) {
+    int n = prices.length;
+    int[][] dp = new int[n][3];
+    dp[0][0] = -prices[0];
+    dp[0][1] = 0;
+    dp[0][2] = 0;
+
+    for (int i = 1; i < n; i++) {
+      dp[i][0] = Math.max(dp[i - 1][0], dp[i - 1][2] - prices[i]);
+      dp[i][1] = dp[i - 1][0] + prices[i];
+      dp[i][2] = Math.max(dp[i - 1][1], dp[i - 1][2]);
+    }
+
+    return Math.max(dp[n - 1][1], dp[n - 1][2]);
+  }
+}
+
+class Solution {
+  public int maxProfit(int[] prices) {
+
+    int sold = Integer.MIN_VALUE, held = Integer.MIN_VALUE, reset = 0;
+
+    for (int price : prices) {
+      int preSold = sold;
+
+      sold = held + price;
+      held = Math.max(held, reset - price);
+      reset = Math.max(reset, preSold);
+    }
+
+    return Math.max(sold, reset);
+  }
+}
 ```
