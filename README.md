@@ -3644,10 +3644,32 @@ class Solution {
 }
 ```
 
-[]()
-
+[188. Best Time to Buy and Sell Stock IV](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/)  
+觉得这个题跟123难度差不多，只需要多一个for循环循环一下k次操作就可以。
 ```
+class Solution {
+    public int maxProfit(int k, int[] prices) {
+        int n = prices.length;
+        int[][] dp = new int[n][k * 2 + 1];
+        dp[0][0] = 0;
+        for(int i = 1; i < k * 2 + 1; i++) {
+            if(i % 2 != 0) {
+                dp[0][i] = -prices[0];
+            }
+        }
+        for(int i = 1; i < n; i++) {
+            for(int j = 1; j < k * 2 + 1; j++) {
+                if(j % 2 != 0) {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1] - prices[i]);
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1] + prices[i]);
+                }
+            }
+        }
 
+        return dp[n - 1][k * 2];
+    }
+}
 ```
 ### 第五十一天
 
@@ -3709,5 +3731,24 @@ class Solution {
 
     return Math.max(sold, reset);
   }
+}
+```
+[714. Best Time to Buy and Sell Stock with Transaction Fee](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/description/)   
+这个题多了个手续费的步骤，记得要减去手续费。因为有了手续费，当天的买卖并不是非负收益，所以需要取sold的max值。写一个不占用空间的方法，跟dp数组是一样的。
+```
+class Solution {
+    public int maxProfit(int[] prices, int fee) {
+        int n = prices.length;
+        int hold = Integer.MIN_VALUE;
+        int sold = 0;
+        
+        for (int price : prices) {
+            int oldHold = hold;
+            hold = Math.max(hold, sold - price - fee);
+            sold = Math.max(sold, oldHold + price);
+        }
+        
+        return sold;
+    }
 }
 ```
