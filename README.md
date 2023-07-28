@@ -3752,3 +3752,90 @@ class Solution {
     }
 }
 ```
+
+### 第五十二天
+[300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/description/)   
+```
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int[] dp = new int[nums.length];
+        int ans = 1;
+        Arrays.fill(dp, 1);
+        for(int i = 1; i < nums.length; i++) {
+            for(int j = 0; j < i; j++) {
+                if(nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[j] + 1, dp[i]);
+                }
+            }
+            ans = Math.max(dp[i], ans);
+        }
+        return ans;
+    }
+}
+```
+[674. Longest Continuous Increasing Subsequence](https://leetcode.com/problems/longest-continuous-increasing-subsequence/description/)   
+这个题的正解应该是用双指针，而且很容易想到。用dp的话很消耗空间，思考一下和题目300的区别就行了。
+```
+class Solution {
+    public int findLengthOfLCIS(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n];
+        int ans = 1;
+        dp[0] = 1;
+        for(int i = 1; i < n; i++) {
+            if(nums[i] > nums[i - 1]) {
+                dp[i] = dp[i - 1] + 1;
+            } else {
+                dp[i] = 1;
+            }
+            ans = Math.max(dp[i], ans);
+        }
+        return ans;
+    }
+}
+```
+
+[718. Maximum Length of Repeated Subarray](https://leetcode.com/problems/maximum-length-of-repeated-subarray/)  
+这个题目还是很有难度的，特别是dp中如何可以巧妙的把二维数组压缩成一维的滚动数组。
+贴上[carl哥的讲解](https://programmercarl.com/0718.%E6%9C%80%E9%95%BF%E9%87%8D%E5%A4%8D%E5%AD%90%E6%95%B0%E7%BB%84.html)  
+
+```
+// 二维dp数组
+class Solution {
+    public int findLength(int[] nums1, int[] nums2) {
+        int result = 0;
+        int[][] dp = new int[nums1.length + 1][nums2.length + 1];
+        
+        for (int i = 1; i < nums1.length + 1; i++) {
+            for (int j = 1; j < nums2.length + 1; j++) {
+                if (nums1[i - 1] == nums2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                    result = Math.max(result, dp[i][j]);
+                }
+            }
+        }
+        
+        return result;
+    }
+}
+
+// 滚动数组
+class Solution {
+    public int findLength(int[] nums1, int[] nums2) {
+        int[] dp = new int[nums2.length + 1];
+        int result = 0;
+
+        for (int i = 1; i <= nums1.length; i++) {
+            for (int j = nums2.length; j > 0; j--) {
+                if (nums1[i - 1] == nums2[j - 1]) {
+                    dp[j] = dp[j - 1] + 1;
+                } else {
+                    dp[j] = 0;
+                }
+                result = Math.max(result, dp[j]);
+            }
+        }
+        return result;
+    }
+}
+```
