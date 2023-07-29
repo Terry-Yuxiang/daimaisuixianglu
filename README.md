@@ -9,7 +9,7 @@
 [第三十四天](#第三十四天)	[第三十五天](#第三十五天)	[第三十六天](#第三十六天)	[第三十七天](#第三十七天)	[第三十八天](#第三十八天)
 [第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)	[第四十二天](#第四十二天)	[第四十三天](#第四十三天)
 [第四十四天](#第四十四天)	[第四十五天](#第四十五天)	[第四十六天](#第四十六天)	[第四十七天](#第四十七天)	[第四十八天](#第四十八天)
-[第四十九天](#第四十九天)	[第五十天](#第五十天)	[第五十一天](#第五十一天)	[第五十二天](#第五十二天)
+[第四十九天](#第四十九天)	[第五十天](#第五十天)	[第五十一天](#第五十一天)	[第五十二天](#第五十二天)	[第五十二天](#第五十三天)
 ## 数组
 ### 第一天
 [704. Binary Search](https://leetcode.com/problems/binary-search/description/)  
@@ -3836,6 +3836,75 @@ class Solution {
             }
         }
         return result;
+    }
+}
+```
+
+### 第五十三天
+[1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/)  
+这个题与718的差别在于，718是subarray，这个题是subsequence。
+```
+class Solution {
+    public int longestCommonSubsequence(String text1, String text2) {
+        char[] ary1 = text1.toCharArray();
+        char[] ary2 = text2.toCharArray();
+        int[] dp = new int[ary2.length + 1];
+        for(int i = 1; i <= ary1.length; i++) {
+            int pre = dp[0];
+            for(int j = 1; j <= ary2.length; j++) {
+                int cur = dp[j];
+                if(ary1[i - 1] == ary2[j - 1]) {
+                    dp[j] = pre + 1;
+                } else {
+                    dp[j] = Math.max(dp[j], dp[j - 1]);
+                }
+                pre = cur;
+            }
+        }
+        return dp[ary2.length];
+    }
+}
+```
+
+[1035. Uncrossed Lines](https://leetcode.com/problems/uncrossed-lines/)  
+本题最关键的地方是想明白两个数组连线不想交，其实就是找两个数组的subsequence。这个题就转换成了跟上个题1143一样了。
+```
+class Solution {
+    public int maxUncrossedLines(int[] nums1, int[] nums2) {
+        int n1 = nums1.length;
+        int n2 = nums2.length;
+        int[] dp = new int[n2 + 1];
+        
+        for(int i = 1; i <= n1; i++) {
+            int pre = dp[0];
+            for(int j = 1; j <= n2; j++) {
+                int cur = dp[j];
+                if(nums1[i - 1] == nums2[j - 1]) {
+                    dp[j] = pre + 1;
+                } else {
+                    dp[j] = Math.max(dp[j], dp[j - 1]);
+                }
+                pre = cur;
+            }
+        }
+        return dp[n2];
+    }
+}
+```
+
+[53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)   
+以前用greedy做过一次，这次用dp来做
+```
+class Solution {
+    public int maxSubArray(int[] nums) {
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+        int ans = dp[0];
+        for(int i = 1; i < nums.length; i++) {
+            dp[i] = Math.max(nums[i], dp[i - 1] + nums[i]);
+            ans = Math.max(ans , dp[i]);
+        }
+        return ans;
     }
 }
 ```
