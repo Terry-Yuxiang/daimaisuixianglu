@@ -10,6 +10,7 @@
 [第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)	[第四十二天](#第四十二天)	[第四十三天](#第四十三天)
 [第四十四天](#第四十四天)	[第四十五天](#第四十五天)	[第四十六天](#第四十六天)	[第四十七天](#第四十七天)	[第四十八天](#第四十八天)
 [第四十九天](#第四十九天)	[第五十天](#第五十天)	[第五十一天](#第五十一天)	[第五十二天](#第五十二天)	[第五十二天](#第五十三天)
+[第五十三天](#第五十三天)	[第五十四天](#第五十四天)
 ## 数组
 ### 第一天
 [704. Binary Search](https://leetcode.com/problems/binary-search/description/)  
@@ -3905,6 +3906,57 @@ class Solution {
             ans = Math.max(ans , dp[i]);
         }
         return ans;
+    }
+}
+```
+
+### 第五十四天
+[392. Is Subsequence](https://leetcode.com/problems/is-subsequence/description/)   
+今天恰好每日一题是[712. Minimum ASCII Delete Sum for Two Strings](https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings/)，与这个很像，难度大很多。
+```
+class Solution {
+    public boolean isSubsequence(String s, String t) {
+        if(t.length() < s.length()) {
+            return false;
+        }
+        int loc = -1;
+        int length = 0;
+        for(int i = 0; i < s.length(); i++) {
+            for(int j = loc + 1; j < t.length(); j++) {
+                if(s.charAt(i) == t.charAt(j)) {
+                    loc = j;
+                    length++;
+                    break;
+                }
+            }
+        }
+        return length == s.length() ? true : false;
+    }
+}
+```
+
+[115. Distinct Subsequences](https://leetcode.com/problems/distinct-subsequences/description/)   
+这个题目我用了剪枝的回溯还是超时了。
+看了一下carl哥的思路，这个题目还是挺有难度的，dp的递推跳过一个字母的思路比较难想。
+```
+class Solution {
+    public int numDistinct(String s, String t) {
+        int[][] dp = new int[s.length() + 1][t.length() + 1];
+        for (int i = 0; i < s.length() + 1; i++) {
+            dp[i][0] = 1;
+        }
+        
+        for (int i = 1; i < s.length() + 1; i++) {
+            for (int j = 1; j < t.length() + 1; j++) {
+                if (s.charAt(i - 1) == t.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
+                }else{
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+        
+        return dp[s.length()][t.length()];
     }
 }
 ```
