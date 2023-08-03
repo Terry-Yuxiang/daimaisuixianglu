@@ -10,7 +10,8 @@
 [第三十九天](#第三十九天)	[第四十天](#第四十天)	[第四十一天](#第四十一天)	[第四十二天](#第四十二天)	[第四十三天](#第四十三天)
 [第四十四天](#第四十四天)	[第四十五天](#第四十五天)	[第四十六天](#第四十六天)	[第四十七天](#第四十七天)	[第四十八天](#第四十八天)
 [第四十九天](#第四十九天)	[第五十天](#第五十天)	[第五十一天](#第五十一天)	[第五十二天](#第五十二天)	[第五十二天](#第五十三天)
-[第五十三天](#第五十三天)	[第五十四天](#第五十四天)
+[第五十三天](#第五十三天)	[第五十四天](#第五十四天)	[第五十五天](#第五十五天)	[第五十六天](#第五十六天)	[第五十七天](#第五十七天)
+[第五十八天](#第五十八天)	[第五十九天](#第五十九天)
 ## 数组
 ### 第一天
 [704. Binary Search](https://leetcode.com/problems/binary-search/description/)  
@@ -3959,6 +3960,86 @@ class Solution {
         }
         
         return dp[s.length()][t.length()];
+    }
+}
+```
+
+### 第五十六天
+[583. Delete Operation for Two Strings](https://leetcode.com/problems/delete-operation-for-two-strings/description/)  
+这个题目同时删除两个字符串有两种dp的思路。  
+第一种，用二维的dp数组记录i和j需要删除的次数。  
+第二种，像1143最长子序列那样，记录两个字符串的共有长度，最后减去共有长度就是需要删除的次数。 
+```
+// 用dp数组记录删除的次数
+class Solution {
+    public int minDistance(String word1, String word2) {
+        int[][] dp = new int[word1.length() + 1][word2.length() + 1];
+        for(int i = 0; i <= word1.length(); i++) {
+            dp[i][0] = i;
+        }
+        for(int i = 0; i <= word2.length(); i++) {
+            dp[0][i] = i;
+        }
+        for(int i = 0; i < word1.length(); i++) {
+            for(int j = 0; j < word2.length(); j++) {
+                if(word1.charAt(i) == word2.charAt(j)) {
+                    dp[i + 1][j + 1] = dp[i][j];
+                } else {
+                    dp[i + 1][j + 1] = Math.min(dp[i][j + 1], dp[i + 1][j]) + 1;
+                }
+            }
+        }
+        return dp[word1.length()][word2.length()];
+    }
+}
+
+//用dp数组记录共有的长度
+class Solution {
+    public int minDistance(String word1, String word2) {
+        int len1 = word1.length();
+        int len2 = word2.length();
+        int[][] dp = new int[len1 + 1][len2 + 1];
+        for(int i = 0; i < len1; i++) {
+            for(int j = 0 ; j < len2; j++) {
+                if(word1.charAt(i) == word2.charAt(j)) {
+                    dp[i + 1][j + 1] = dp[i][j] + 1;
+                } else {
+                    dp[i + 1][j + 1] = Math.max(dp[i][j + 1], dp[i + 1][j]);
+                }
+            }
+        }
+        return len1 + len2 - dp[len1][len2] * 2;
+        
+    }
+}
+
+```
+
+[72. Edit Distance](https://leetcode.com/problems/edit-distance/)   
+前面铺垫了那么多，终于来到了最终问题，编辑距离。  
+推dp的方法是一样的，只不过这次的操作比以前复杂，需要好好思考一下。
+```
+class Solution {
+    public int minDistance(String word1, String word2) {
+        int len1 = word1.length();
+        int len2 = word2.length();
+        int[][] dp = new int[len1 + 1][len2 + 2];
+        for(int i = 0; i <= len1; i++) {
+            dp[i][0] = i;
+        }
+        for(int j = 0; j <= len2; j++) {
+            dp[0][j] = j;
+        }
+        for(int i = 0; i < len1; i++) {
+            for(int j = 0; j < len2; j++) {
+                if(word1.charAt(i) == word2.charAt(j)) {
+                    dp[i + 1][j + 1] = dp[i][j];
+                } else {
+                    dp[i + 1][j + 1] = Math.min(dp[i][j], Math.min(dp[i + 1][j], dp[i][j + 1])) + 1;
+                }
+            }
+        }
+        return dp[len1][len2];
     }
 }
 ```
