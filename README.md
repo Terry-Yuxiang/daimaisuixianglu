@@ -3909,8 +3909,10 @@ class Solution {
     }
 }
 ```
-
 ### 第五十四天
+周末休息
+
+### 第五十五天
 [392. Is Subsequence](https://leetcode.com/problems/is-subsequence/description/)   
 今天恰好每日一题是[712. Minimum ASCII Delete Sum for Two Strings](https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings/)，与这个很像，难度大很多。
 ```
