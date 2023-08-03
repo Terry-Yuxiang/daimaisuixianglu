@@ -4043,3 +4043,35 @@ class Solution {
     }
 }
 ```
+
+### 第五十七天
+[647. Palindromic Substrings](https://leetcode.com/problems/palindromic-substrings/description/)   
+回文子串，如果用暴力方法是O(n^3)。  
+dp的简化思路是在O(1)的时间内找到下标i-j的字符串是不是回文，而i-j跟(i-1) - (j-1)有关系。这样思路就明确了。
+```
+class Solution {
+    public int countSubstrings(String s) {
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        int ans = 0;
+        for(int i = 0; i < s.length(); i++) {
+            for(int j = 0; j <= i; j++) {
+                dp[i][j] = true;
+            }
+            ans++;
+        }
+        for(int i = s.length() - 1; i >= 0; i--) {
+            for(int j = s.length() - 1; j > i; j--) {
+                if(s.charAt(j) != s.charAt(i)) {
+                    dp[i][j] = false;
+                } else {
+                    dp[i][j] = dp[i + 1][j - 1];
+                }
+                if(dp[i][j])    ans++;
+            }
+        }
+        return ans;
+        
+    }
+}
+```
+
