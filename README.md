@@ -4095,3 +4095,138 @@ public class Solution {
     }
 }
 ```
+## 单调栈
+做了那么久的dp问题，今天进入到单调栈的内容。
+### 第五十八天
+[739. Daily Temperatures=](https://leetcode.com/problems/daily-temperatures/)  
+所谓的单调栈就是维护一个从栈顶到栈底自增或者自减的栈。从栈顶到栈底自增是增栈。
+```
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        Stack<Integer> stack = new Stack<>();
+        int n = temperatures.length;
+        int[] ans = new int[n];
+        if(n == 0) {
+            return ans;
+        }
+        stack.add(0);
+        for(int i = 1; i < n; i++) {
+            while(!stack.isEmpty() && temperatures[i] > temperatures[stack.peek()]) {
+                int loc = stack.pop();
+                ans[loc] = i - loc;
+            }
+            stack.add(i);
+        }
+        return ans;
+    }
+}
+```
+
+[496. Next Greater Element I](https://leetcode.com/problems/next-greater-element-i/)  
+```
+class Solution {
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+        Stack<Integer> temp = new Stack<>();
+        int[] res = new int[nums1.length];
+        Arrays.fill(res,-1);
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
+        for (int i = 0 ; i< nums1.length ; i++){
+            hashMap.put(nums1[i],i);
+        }
+        temp.add(0);
+        for (int i = 1; i < nums2.length; i++) {
+            if (nums2[i] <= nums2[temp.peek()]) {
+                temp.add(i);
+            } else {
+                while (!temp.isEmpty() && nums2[temp.peek()] < nums2[i]) {
+                    if (hashMap.containsKey(nums2[temp.peek()])){
+                        Integer index = hashMap.get(nums2[temp.peek()]);
+                        res[index] = nums2[i];
+                    }
+                    temp.pop();
+                }
+                temp.add(i);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+### 第五十九天
+今天继续单调栈的内容
+[503. Next Greater Element II](https://leetcode.com/problems/next-greater-element-ii/description/)   
+当时写的判读了一下是否循环了一圈，其实不需要这么麻烦，遍历两遍数组即可。
+```
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        //边界判断
+        if(nums == null || nums.length <= 1) {
+            return new int[]{-1};
+        }
+        int size = nums.length;
+        int[] result = new int[size];//存放结果
+        Arrays.fill(result,-1);//默认全部初始化为-1
+        Stack<Integer> st= new Stack<>();//栈中存放的是nums中的元素下标
+        for(int i = 0; i < 2*size; i++) {
+            while(!st.empty() && nums[i % size] > nums[st.peek()]) {
+                result[st.peek()] = nums[i % size];//更新result
+                st.pop();//弹出栈顶
+            }
+            st.push(i % size);
+        }
+        return result;
+    }
+}
+```
+[42. Trapping Rain Water](https://leetcode.com/problems/trapping-rain-water/)   
+这个题有暴力解法，双指针，单调栈三种方法。
+很经典的题目，值得好好思索一下。
+```
+// 单调栈的解法
+// 用的是单调递增的栈，相当于出现凹槽了就计算
+class Solution {
+    public int trap(int[] height){
+        int size = height.length;
+
+        if (size <= 2) return 0;
+
+        // in the stack, we push the index of array
+        // using height[] to access the real height
+        Stack<Integer> stack = new Stack<Integer>();
+        stack.push(0);
+
+        int sum = 0;
+        for (int index = 1; index < size; index++){
+            int stackTop = stack.peek();
+            if (height[index] < height[stackTop]){
+                stack.push(index);
+            }else if (height[index] == height[stackTop]){
+                // 因为相等的相邻墙，左边一个是不可能存放雨水的，所以pop左边的index, push当前的index
+                stack.pop();
+                stack.push(index);
+            }else{
+                //pop up all lower value
+                int heightAtIdx = height[index];
+                while (!stack.isEmpty() && (heightAtIdx > height[stackTop])){
+                    int mid = stack.pop();
+
+                    if (!stack.isEmpty()){
+                        int left = stack.peek();
+
+                        int h = Math.min(height[left], height[index]) - height[mid];
+                        int w = index - left - 1;
+                        int hold = h * w;
+                        if (hold > 0) sum += hold;
+                        stackTop = stack.peek();
+                    }
+                }
+                stack.push(index);
+            }
+        }
+
+        return sum;
+    }
+}
+```
