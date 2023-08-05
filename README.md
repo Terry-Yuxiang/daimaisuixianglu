@@ -11,7 +11,7 @@
 [第四十四天](#第四十四天)	[第四十五天](#第四十五天)	[第四十六天](#第四十六天)	[第四十七天](#第四十七天)	[第四十八天](#第四十八天)
 [第四十九天](#第四十九天)	[第五十天](#第五十天)	[第五十一天](#第五十一天)	[第五十二天](#第五十二天)	[第五十二天](#第五十三天)
 [第五十三天](#第五十三天)	[第五十四天](#第五十四天)	[第五十五天](#第五十五天)	[第五十六天](#第五十六天)	[第五十七天](#第五十七天)
-[第五十八天](#第五十八天)	[第五十九天](#第五十九天)
+[第五十八天](#第五十八天)	[第五十九天](#第五十九天)	[第六十天](#第六十天)
 ## 数组
 ### 第一天
 [704. Binary Search](https://leetcode.com/problems/binary-search/description/)  
@@ -4227,6 +4227,39 @@ class Solution {
         }
 
         return sum;
+    }
+}
+```
+
+
+### 第六十天
+最后一天了，明天开始二刷
+[84. Largest Rectangle in Histogram](https://leetcode.com/problems/largest-rectangle-in-histogram/description/)   
+这个题和接雨水很像，但是细节上有区别。  
+这个题是找一个柱子左右两侧比他低的第一个，这样子是以这个柱子为高度可围成的最大矩形面积。
+```
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        int[] newHeight = new int[heights.length + 2];
+        System.arraycopy(heights, 0, newHeight, 1, heights.length);
+        newHeight[heights.length+1] = 0;
+        newHeight[0] = 0;
+
+        Stack<Integer> stack = new Stack<>();
+        stack.push(0);
+
+        int res = 0;
+        for (int i = 1; i < newHeight.length; i++) {
+            while (newHeight[i] < newHeight[stack.peek()]) {
+                int mid = stack.pop();
+                int w = i - stack.peek() - 1;
+                int h = newHeight[mid];
+                res = Math.max(res, w * h);
+            }
+            stack.push(i);
+
+        }
+        return res;
     }
 }
 ```
