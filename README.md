@@ -772,7 +772,7 @@ class Solution {
 
 
 ### 第十一天
-20. Valid Parentheses.  
+[20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)   
 经典的栈的使用
 ```
 class Solution {
@@ -799,7 +799,7 @@ class Solution {
     }
 }
 ```
-1047. Remove All Adjacent Duplicates In String.  
+[1047. Remove All Adjacent Duplicates In String.](https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/)   
 也是一个比较经典的栈的题目，可以用栈的特性来进行消除。
 这里可以用字符串直接作为栈，这样可以省去用把栈转换为字符串的时间。
 ```
@@ -827,7 +827,7 @@ class Solution {
     }
 }
 ```
-150. Evaluate Reverse Polish Notation
+[150. Evaluate Reverse Polish Notation](https://leetcode.com/problems/evaluate-reverse-polish-notation/)  
 同样是比较经典的栈的应用
 ```
 class Solution {
@@ -869,7 +869,8 @@ class Solution {
 
 
 ### 第十三天
-239. Sliding Window Maximum
+[239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)   
+
 今天的题目难度比较大，使用的单调队列。有两种写法，其中第一种用下标的写法更好理解一些。
 ```
 //解法二
