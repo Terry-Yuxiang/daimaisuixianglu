@@ -1156,7 +1156,7 @@ public boolean isMirror(TreeNode t1, TreeNode t2) {
 ```
 
 ### 第十六天 
-[104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/v)  
+[104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)  
 基础的树求depth的题目，需要牢牢掌握。
 ```
 class Solution {
