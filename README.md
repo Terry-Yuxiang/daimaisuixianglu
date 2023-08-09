@@ -931,7 +931,8 @@ class Solution {
     }
 }
 ```
-347. Top K Frequent Elements
+[347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/description/)   
+
 这个题目是heap的题目，用到PriorityQueue来做，很经典的heap题目。
 大顶堆和小顶堆都可以完成这个题目。
 ```
